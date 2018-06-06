@@ -20,7 +20,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onSubmit(View view) {
-        User u = new User("Pablo");
+        EditText nameEntered = findViewById(R.id.nameHolder);
+        User u = new User(nameEntered.getText().toString());
         mDatabase.child("UserList").child("001").setValue(u);
     }
 }
