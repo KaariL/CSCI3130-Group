@@ -1,12 +1,12 @@
 package com.example.group3.csci3130_group3_project;
 
 public class Location {
-    double xCoord;
-    double yCoord;
+    double lon;
+    double lat;
     String type;
-    public Location(double x, double y, String t){
-        xCoord=x;
-        yCoord=y;
+    public Location(double lo, double la, String t){
+        lon=lo;
+        lat=la;
         type=t;
     }
 }
