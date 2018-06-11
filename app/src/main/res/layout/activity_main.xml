@@ -7,16 +7,16 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/logInButton"
+        android:id="@+id/accountButton"
         android:layout_width="wrap_content"
         android:layout_height="53dp"
         android:layout_marginBottom="344dp"
         android:layout_marginTop="8dp"
-        android:onClick="goLogIn"
+        android:onClick="accountFunc"
         android:text="Sign In"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.912"
+        app:layout_constraintHorizontal_bias="0.905"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameHolder"
         app:layout_constraintVertical_bias="0.215" />
@@ -25,26 +25,11 @@
         android:id="@+id/nameHolder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="288dp"
-        android:layout_marginStart="288dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginLeft="268dp"
+        android:layout_marginStart="268dp"
+        android:layout_marginTop="16dp"
         android:text="Not Signed In!"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/logOutButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="268dp"
-        android:layout_marginStart="268dp"
-        android:layout_marginTop="8dp"
-        android:onClick="logout"
-        android:text="Log Out"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logInButton"
-        app:layout_constraintVertical_bias="0.005" />
 
 </android.support.constraint.ConstraintLayout>

@@ -18,7 +18,6 @@ public class LogIn extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private static final String TAG = "LogIn";
-    boolean success = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +46,11 @@ public class LogIn extends AppCompatActivity {
                 });
     }
 
+    private View intent;
     public void signInUser(View view) {
         EditText emailEntered = findViewById(R.id.emailHolder);
         EditText passEntered = findViewById(R.id.passwordHolder);
+        intent = view;
         mAuth.signInWithEmailAndPassword(emailEntered.getText().toString(), passEntered.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -57,7 +58,8 @@ public class LogIn extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            success = true;
+                            finish();
+                            startActivity(new Intent(intent.getContext(),MainActivity.class));
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -66,10 +68,8 @@ public class LogIn extends AppCompatActivity {
                         }
                     }
                 });
-        if(success){
-            finish();
-            startActivity(new Intent(this,MainActivity.class));
-        }
     }
+
+
 
 }
