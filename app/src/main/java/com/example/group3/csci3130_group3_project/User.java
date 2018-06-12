@@ -1,14 +1,13 @@
 package com.example.group3.csci3130_group3_project;
-import java.util.ArrayList;
 
 public class User {
     String name;
-    String password;
-    Location home;
-    ArrayList<Location> Starred;
+    String info;
+    public User(){
 
-    public User(String n){
+    }
+    public User(String n, String i){
         name = n;
-        Starred = new ArrayList<Location>();
+        info = i;
     }
 }

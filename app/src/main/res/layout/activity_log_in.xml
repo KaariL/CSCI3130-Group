@@ -42,7 +42,7 @@
         android:onClick="signInUser"
         android:text="Sign In"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordHolder" />
+        app:layout_constraintTop_toBottomOf="@+id/firstInfoHolder" />
 
     <Button
         android:id="@+id/button2"
@@ -56,6 +56,33 @@
         android:onClick="createUser"
         android:text="Create Acnt."
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.048"
         app:layout_constraintStart_toEndOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/firstInfoHolder" />
+
+    <EditText
+        android:id="@+id/firstNameHolder"
+        android:layout_width="219dp"
+        android:layout_height="54dp"
+        android:layout_marginLeft="84dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Name (For Acnt Creation)"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordHolder" />
+
+    <EditText
+        android:id="@+id/firstInfoHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="84dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Info (For Acnt Creation)"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/firstNameHolder" />
 </android.support.constraint.ConstraintLayout>
