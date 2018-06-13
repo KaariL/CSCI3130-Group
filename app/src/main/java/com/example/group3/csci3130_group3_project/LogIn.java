@@ -33,14 +33,14 @@ public class LogIn extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
-    
+
     public void createUser(View view) {
         intent = view;
         EditText emailEntered = findViewById(R.id.emailHolder);
         EditText passEntered = findViewById(R.id.passwordHolder);
         nameEntered = findViewById(R.id.firstNameHolder);
         infoEntered = findViewById(R.id.firstInfoHolder);
-        if(infoEntered.getText().toString() == null || nameEntered.getText().toString() == null){
+        if(infoEntered.getText().toString().isEmpty() || nameEntered.getText().toString().isEmpty()||emailEntered.getText().toString().isEmpty()||passEntered.getText().toString().isEmpty()){
             Toast.makeText(LogIn.this, "WHOOPS!! Some info is missing!",
                     Toast.LENGTH_SHORT).show();
         }
@@ -54,7 +54,7 @@ public class LogIn extends AppCompatActivity {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 User u = new User(nameEntered.getText().toString(),infoEntered.getText().toString());
                                 mDatabase.child(user.getUid()).child("Account Data").setValue(u);
-                                Toast.makeText(LogIn.this, "DONE!",
+                                Toast.makeText(LogIn.this, "Account Created!",
                                         Toast.LENGTH_SHORT).show();
                                 finish();
                                 startActivity(new Intent(intent.getContext(),MainActivity.class));
@@ -73,6 +73,10 @@ public class LogIn extends AppCompatActivity {
         EditText emailEntered = findViewById(R.id.emailHolder);
         EditText passEntered = findViewById(R.id.passwordHolder);
         intent = view;
+        if(emailEntered.getText().toString().isEmpty() || passEntered.getText().toString().isEmpty()){
+            Toast.makeText(LogIn.this, "HMMMMM Check your input!",
+                    Toast.LENGTH_SHORT).show();
+        }
         mAuth.signInWithEmailAndPassword(emailEntered.getText().toString(), passEntered.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
