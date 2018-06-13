@@ -51,12 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    // Getting Post failed, log a message
                     Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                    // [START_EXCLUDE]
                     Toast.makeText(MainActivity.this, "Logged Out!",
                             Toast.LENGTH_SHORT).show();
-                    // [END_EXCLUDE]
                 }
             };
             mUserData.addValueEventListener(postListener);
