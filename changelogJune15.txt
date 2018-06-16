@@ -1,0 +1,11 @@
+***Extensive changes to the branch were made by Alex and Kyle on June 15, 2018.
+   The changes are too long for a commit tag, so catalgoued here
+
+	-Removed all hardcoded strings in the register view, replaces with android string resources
+ 	-Refactored the constraints on register page layout
+	-Refactored UI elements on register activity, giving views more descriptive ids
+	-Added PasswordValidator class and corresponding JUnit tests
+	-Added registrationValidator(), a class which has methods to validate that the form on the register page is valid
+	-Added a button to the mainActivtity that opens the registerActivity
+	-Implemented onClickk event listener on register page submit button which ensures the form is valid and displays corresponding
+	 error messages if not.
