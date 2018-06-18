@@ -3,10 +3,7 @@ package com.example.group3.csci3130_group3_project;
 public class registrationValidator {
     public registrationValidator(){}
 
-    public boolean usernameIsValid(String username){
-        return(username.length() < 41 && username.length() > 2);
 
-    }
     public boolean emailIsValid(String email){
         //regex for email from emailregex.com
         return(email.matches("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]" +

@@ -67,12 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
     public void validateForm(View view){
         this.restoreFieldDefaults();
         formIsValid = true;
-        if(!validator.usernameIsValid(this.getUsernameField())){
-            TextView username = findViewById(R.id.usernameText);
-            username.setText(R.string.userRegErr);
-            username.setTextColor(Color.RED);
-            this.formIsValid = false;
-        }
+
         if(!validator.emailIsValid(this.getEmailField())){
             TextView email = findViewById((R.id.emailText));
             email.setText(R.string.emailRegError);
@@ -97,12 +92,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
     public void restoreFieldDefaults(){
-        TextView user = findViewById(R.id.usernameText);
         TextView email = findViewById(R.id.emailText);
         TextView password = findViewById(R.id.passwordText);
         TextView confirmPass = findViewById(R.id.confirmPasswordText);
-        user.setText(R.string.userRegDefault);
-        user.setTextColor(getResources().getColor(R.color.colorPrimary));
         email.setText(R.string.emailRegDefault);
         email.setTextColor(getResources().getColor(R.color.colorPrimary));
         password.setText(R.string.passwordRegDefault);
@@ -110,10 +102,6 @@ public class RegisterActivity extends AppCompatActivity {
         confirmPass.setText(R.string.confirmPassRegDefault);
         confirmPass.setTextColor(getResources().getColor(R.color.colorPrimary));
 
-    }
-    public String getUsernameField(){
-       EditText username = (EditText) findViewById(R.id.username);
-       return username.getText().toString();
     }
     public String getEmailField(){
         EditText email = (EditText) findViewById(R.id.email);
