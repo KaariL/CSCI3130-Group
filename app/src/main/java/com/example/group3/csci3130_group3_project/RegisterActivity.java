@@ -1,5 +1,6 @@
 package com.example.group3.csci3130_group3_project;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -42,8 +43,12 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Log.d(TAG, "createUserWithEmail:success");
+                            Intent main = new Intent(RegisterActivity.this, MainActivity.class);
                             FirebaseUser user = mAuth.getCurrentUser();
-                            
+                            RegisterActivity.this.finish();
+                            CredentialActivity.credentialPage.finish();
+                            startActivity(main);
+
                         }
                         else {
                             Log.w(TAG, "createUserWithEmail:failed");

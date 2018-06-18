@@ -39,7 +39,7 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class CredentialActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-
+    public static CredentialActivity credentialPage;
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -65,8 +65,10 @@ public class CredentialActivity extends AppCompatActivity implements LoaderCallb
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        credentialPage = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credential);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
