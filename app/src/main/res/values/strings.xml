@@ -35,6 +35,11 @@
     <string name="title_activity_email">emailActivity</string>
     <string name="login_prompt">Sign in with your registered email to start using App!</string>
     <!--end login strings *****************-->
+    <!--***********Strings for navbar**********-->
+    <string name="favorites">Favorites</string>
+    <string name="schedule">My Schedule</string>
+    <string name="services">Dal Services</string>
 
+    <!--*********End navbar strings******-->
 
 </resources>

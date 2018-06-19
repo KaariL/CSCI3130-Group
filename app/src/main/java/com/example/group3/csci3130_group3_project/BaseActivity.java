@@ -13,9 +13,13 @@ import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
-public class BaseActivity extends AppCompatActivity {
+import com.google.firebase.auth.FirebaseAuth;
+
+public abstract class BaseActivity extends AppCompatActivity{
     private DrawerLayout mDrawerLayout;
 
     @Override
@@ -25,7 +29,6 @@ public class BaseActivity extends AppCompatActivity {
     }
     public void addNavBar() {
         setContentView(R.layout.activity_base);
-
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -33,7 +36,6 @@ public class BaseActivity extends AppCompatActivity {
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -46,7 +48,9 @@ public class BaseActivity extends AppCompatActivity {
                         // Add code here to update the UI based on the item selected
                         // For example, swap UI fragments here
                         //Intent loginIntent = new Intent(this,LoginActivity.class);
-
+                        if(menuItem.getItemId() == R.id.nav_logout){
+                            logout();
+                        }
                         return true;
                     }
                 });
@@ -60,11 +64,25 @@ public class BaseActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    public void setActivityLayout(int id){
+    public void setActivityLayout(int id) {
         LayoutInflater inflater = getLayoutInflater();
         FrameLayout frameLayout = findViewById(R.id.content_frame);
         View layout = findViewById(id);
         frameLayout.addView(inflater.inflate(id, null), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
                 ViewGroup.LayoutParams.FILL_PARENT));
+
     }
+    public void logout() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        if(firebaseAuth.getCurrentUser()==null){
+            return;
+        }
+            firebaseAuth.signOut();
+            Intent logout = new Intent(BaseActivity.this, CredentialActivity.class);
+            finish();
+            startActivity(logout);
+
+
+    }
+
 }
