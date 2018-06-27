@@ -7,11 +7,13 @@ import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.*;
 
@@ -22,15 +24,21 @@ import static org.junit.Assert.*;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
+    String goodUsername = "kaari.landry@gmail.com";
+    String goodPassword = "Agr34Tpw!";
     @Rule
-    public ActivityTestRule<MainActivity> activityActivityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class);
-    @Test
-    public void opensMenu() {
-        Espresso.onView(withId(R.id.toolbar)).perform(ViewActions.click());
-        Espresso.onView(withId(R.id.nav_view)).check(matches(withId(R.id.drawer_layout)));
+    public ActivityTestRule<CredentialActivity> activityActivityTestRule =
+            new ActivityTestRule<>(CredentialActivity.class);
+    @Before
+    public void logIn(){
+        Espresso.onView(withId(R.id.editText_name)).perform(ViewActions.typeText(goodUsername));
+        Espresso.onView(withId(R.id.editText_psw)).perform(ViewActions.typeText(goodPassword));
+        Espresso.onView(withId(R.id.button_login)).perform(ViewActions.click());
+        //this should redirect you to map
     }
-    //@Test
-    //public void navigatesCorrect() {
-    //    Espresso.onView(withId(R.id.)).perform(ViewActions.click());
-    //}
+    @Test
+    public void isOnMapActivity(){
+        Espresso.onView(withId(R.id.map)).check(matches(isDisplayed()));
+    }
+
 }
