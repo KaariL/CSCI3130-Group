@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,6 +53,12 @@ public abstract class BaseActivity extends AppCompatActivity{
                         if(menuItem.getItemId() == R.id.nav_logout){
                             logout();
                         }
+                        if(menuItem.getItemId() == R.id.nav_favorites){
+                            showFavs();
+                        }
+                        if(menuItem.getItemId() == R.id.nav_services){
+                            showMain();
+                        }
                         return true;
                     }
                 });
@@ -81,8 +89,17 @@ public abstract class BaseActivity extends AppCompatActivity{
             Intent logout = new Intent(BaseActivity.this, CredentialActivity.class);
             finish();
             startActivity(logout);
-
-
     }
+
+    public void showFavs() {
+        setContentView(R.layout.activity_base);
+        addNavBar();
+    }
+
+    public void showMain() {
+        setContentView(R.layout.activity_main);
+        addNavBar();
+    }
+
 
 }
