@@ -27,12 +27,11 @@ public abstract class BaseActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        addNavBar();
     }
     public void addNavBar() {
         setContentView(R.layout.activity_base);
         mDrawerLayout = findViewById(R.id.drawer_layout);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
@@ -92,13 +91,15 @@ public abstract class BaseActivity extends AppCompatActivity{
     }
 
     public void showFavs() {
-        setContentView(R.layout.activity_base);
-        addNavBar();
+        finish();
+        Intent i = new Intent(this,Favorites.class);
+        startActivity(i);
     }
 
     public void showMain() {
-        setContentView(R.layout.activity_main);
-        addNavBar();
+        finish();
+        Intent i = new Intent(this,MainActivity.class);
+        startActivity(i);
     }
 
 
