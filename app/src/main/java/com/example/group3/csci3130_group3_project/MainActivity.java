@@ -1,6 +1,7 @@
 package com.example.group3.csci3130_group3_project;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -52,6 +53,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     TextView userName;
     private GoogleMap mMap;
     private LocationManager mLocationManager;
+    public Location mCurrentLocation;
+
+    private static final int REQUEST_FINE_LOCATION_ACCESS = 1;
 
 
     @Override
@@ -71,7 +75,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         userName = findViewById(R.id.userEmail);
         userName.setText(user.getEmail());
 
-        // Get Location Manager and check for GPS & Network location services
+        // Code that allegedly checks for GPS Availability
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 !mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
@@ -90,14 +94,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
             alertDialog.setCanceledOnTouchOutside(false);
             alertDialog.show();
         }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    1);
-            return;
-        }
-        mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, (android.location.LocationListener) new MyLocationListenerGPS(), null);
+
+
+        updateLocation();
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -107,13 +106,19 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     }
 
     @Override
+    public void onStart(){
+        super.onStart();
+        updateLocation();
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng dal = new LatLng(44.6366, -63.5917);
+        mMap.addMarker(new MarkerOptions().position(dal).title("Dalhousie!"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(dal));
     }
 
     public void mapSearch(View view) {
@@ -142,90 +147,83 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     }
 
 
+    //Sets the location on map to the one described in the global mCurrentLocation
     public void FIND(View view) {
-        EditText locationSearch = (EditText) findViewById(R.id.searchBar);
-
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Error("Permission Error");
-            // TODO: Consider calling
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    1);
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        if (mCurrentLocation == null) {
+            Display("Current Location NULL");
             return;
         }
-        if(mLocationManager==null){
-            Error("LM Error");
-            return;
-        }
-        if(!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            Error("GPS Error");
-            return;
-        }
-
-        Location L = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if(L==null) {
-            Error("L Error");
-            return;
-        }
-
-        LatLng HERE = new LatLng(L.getLatitude(), L.getLongitude());
+        LatLng HERE = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         mMap.addMarker(new MarkerOptions().position(HERE).title("I AM HERE"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(HERE));
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
 
-            // other 'case' lines to check for other
-            // permissions this app might request.
+    /*
+    * Update location will use the location manager to get the most recent GPS coordinates set in the device/emulator
+    * The response is processed in MyLocationListenerGPS
+    * */
+    public void updateLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Display("Permission Error");
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_FINE_LOCATION_ACCESS);
+            return;
         }
+        mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, new MyLocationListenerGPS(), null);
     }
 
-    public void Error(String e){
-        EditText locationSearch = (EditText) findViewById(R.id.searchBar);
-        locationSearch.setText(e);
-    }
-
+    /*
+     * After updateLocation() has been called MyLocationListenerGPS handles the responses to the update
+     * Once the location is received it updates the global mCurrentLocation via the location manager
+     * */
     public class MyLocationListenerGPS implements LocationListener {
+        @SuppressLint("MissingPermission")
         @Override
         public void onLocationChanged(Location location) {
-            Error("Location Changed!");
+            Display("Location Changed!");
+            mCurrentLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
 
+        @SuppressLint("MissingPermission")
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            Error("Status change");
+            Display("Status change");
+            mCurrentLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
 
         @Override
         public void onProviderEnabled(String provider) {
-            Error("provider change");
+            Display("provider change");
         }
 
         @Override
         public void onProviderDisabled(String provider) {
-            Error("provider died");
+            Display("provider died");
         }
+    }
+
+    /*
+    * If the user has not granted the app the required permissions this code handles the request and response
+    * TODO: Perform some sort of error handling in case they say no and improve current error handling
+    * */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_FINE_LOCATION_ACCESS: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                }
+                return;
+            }
+        }
+    }
+
+    public void Display(String e) {
+        TextView st = (TextView) findViewById(R.id.statusText);
+        st.setText(e);
     }
 }
