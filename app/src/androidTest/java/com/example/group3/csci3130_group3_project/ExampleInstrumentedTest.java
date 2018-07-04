@@ -35,10 +35,10 @@ public class ExampleInstrumentedTest {
         Espresso.onView(withId(R.id.editText_psw)).perform(ViewActions.typeText(goodPassword));
         Espresso.onView(withId(R.id.button_login)).perform(ViewActions.click());
         //this should redirect you to map
-    }
-    @Test
-    public void isOnMapActivity(){
         Espresso.onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
+
+    //@Test
+    //public void isOnMapActivity(){}
 
 }
