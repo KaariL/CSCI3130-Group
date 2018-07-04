@@ -26,18 +26,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.Places;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -118,7 +111,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         // Add a marker in Sydney and move the camera
         LatLng dal = new LatLng(44.6366, -63.5917);
         mMap.addMarker(new MarkerOptions().position(dal).title("Dalhousie!"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(dal));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dal, 15));
     }
 
     public void mapSearch(View view) {
@@ -137,11 +130,11 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
                 Address address = addressList.get(0);
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(latLng).title("User Search"));
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
             } else {
                 LatLng sydney = new LatLng(-34, 151);
                 mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
             }
         }
     }
@@ -155,7 +148,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         }
         LatLng HERE = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         mMap.addMarker(new MarkerOptions().position(HERE).title("I AM HERE"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(HERE));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(HERE, 15));
     }
 
 
