@@ -28,17 +28,19 @@ public class ExampleInstrumentedTest {
     String goodPassword = "Agr34Tpw!";
     @Rule
     public ActivityTestRule<CredentialActivity> activityActivityTestRule =
-            new ActivityTestRule<>(CredentialActivity.class);
+            new ActivityTestRule<CredentialActivity>(CredentialActivity.class);
     @Before
     public void logIn(){
         Espresso.onView(withId(R.id.editText_name)).perform(ViewActions.typeText(goodUsername));
         Espresso.onView(withId(R.id.editText_psw)).perform(ViewActions.typeText(goodPassword));
         Espresso.onView(withId(R.id.button_login)).perform(ViewActions.click());
         //this should redirect you to map
-        Espresso.onView(withId(R.id.map)).check(matches(isDisplayed()));
+
     }
 
-    //@Test
-    //public void isOnMapActivity(){}
+    @Test
+    public void isOnMapActivity(){
+        Espresso.onData(withId(R.id.map)).check(matches(isDisplayed()));
+    }
 
 }
