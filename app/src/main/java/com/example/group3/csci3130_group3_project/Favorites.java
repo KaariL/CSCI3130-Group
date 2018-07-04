@@ -12,4 +12,11 @@ public class Favorites extends BaseActivity {
         setActivityLayout(R.layout.activity_favorites);
     }
 
+    public void goWithAddress(){
+
+    }
+    public void goWithLatLong(){
+
+    }
+
 }
