@@ -53,6 +53,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private LocationManager mLocationManager;
 
+    private static final int REQUEST_FINE_LOCATION_ACCESS = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         userName = findViewById(R.id.userEmail);
         userName.setText(user.getEmail());
 
-        // Get Location Manager and check for GPS & Network location services
+        // Code that allegedly checks for GPS Availability
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 !mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
@@ -94,7 +96,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
             // TODO: Consider calling
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    1);
+                    REQUEST_FINE_LOCATION_ACCESS);
             return;
         }
         mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, (android.location.LocationListener) new MyLocationListenerGPS(), null);
@@ -151,13 +153,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
             // TODO: Consider calling
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    1);
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+                    REQUEST_FINE_LOCATION_ACCESS);
             return;
         }
         if(mLocationManager==null){
@@ -184,27 +180,19 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
+            case REQUEST_FINE_LOCATION_ACCESS: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                 }
                 return;
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request.
         }
     }
 
     public void Error(String e){
-        EditText locationSearch = (EditText) findViewById(R.id.searchBar);
-        locationSearch.setText(e);
+        TextView st = (TextView) findViewById(R.id.statusText);
+        st.setText(e);
     }
 
     public class MyLocationListenerGPS implements LocationListener {
