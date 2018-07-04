@@ -39,6 +39,7 @@
     <string name="favorites">Favorites</string>
     <string name="schedule">My Schedule</string>
     <string name="services">Dal Services</string>
+    <string name="title_activity_maps">Map</string>
 
     <!--*********End navbar strings******-->
 
