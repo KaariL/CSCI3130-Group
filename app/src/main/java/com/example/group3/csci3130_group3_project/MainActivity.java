@@ -26,18 +26,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.Places;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,6 +47,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private LocationManager mLocationManager;
     public Location mCurrentLocation;
+
+    public String receivedAddress;
 
     private static final int REQUEST_FINE_LOCATION_ACCESS = 1;
 
@@ -75,10 +70,10 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         userName = findViewById(R.id.userEmail);
         userName.setText(user.getEmail());
 
-        // Code that allegedly checks for GPS Availability
+        // Code that checks for GPS Availability
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                !mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            mLocationManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER,true);
             // Build the alert dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Location Services Not Active");
@@ -95,7 +90,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
             alertDialog.show();
         }
 
-
+        receivedAddress = (String)getIntent().getStringExtra("Address");
         updateLocation();
 
 
@@ -108,6 +103,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     @Override
     public void onStart(){
         super.onStart();
+        receivedAddress = (String)getIntent().getStringExtra("Address");
         updateLocation();
     }
 
@@ -115,33 +111,48 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        if(receivedAddress!=null){
+            EditText locationSearch = (EditText) findViewById(R.id.searchBar);
+            locationSearch.setText(receivedAddress);
+            performSearch();
+            return;
+        }
+
         // Add a marker in Sydney and move the camera
         LatLng dal = new LatLng(44.6366, -63.5917);
         mMap.addMarker(new MarkerOptions().position(dal).title("Dalhousie!"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(dal));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dal, 15));
     }
 
     public void mapSearch(View view) {
+        performSearch();
+    }
+    public void performSearch(){
         EditText locationSearch = (EditText) findViewById(R.id.searchBar);
         String location = locationSearch.getText().toString();
         List<Address> addressList = null;
 
-        if (location != null || !location.equals("")) {
-            Geocoder geocoder = new Geocoder(this);
-            try {
-                addressList = geocoder.getFromLocationName(location, 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (!addressList.isEmpty()) {
-                Address address = addressList.get(0);
-                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(latLng).title("User Search"));
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-            } else {
-                LatLng sydney = new LatLng(-34, 151);
-                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        if (location != null) {
+            if(!location.isEmpty()) {
+
+                Geocoder geocoder = new Geocoder(this);
+                try {
+                    addressList = geocoder.getFromLocationName(location, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(addressList != null) {
+                    if (!addressList.isEmpty()) {
+                        Address address = addressList.get(0);
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(latLng).title("User Search"));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                    } else {
+                        LatLng sydney = new LatLng(-34, 151);
+                        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
+                    }
+                }
             }
         }
     }
@@ -155,14 +166,14 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         }
         LatLng HERE = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         mMap.addMarker(new MarkerOptions().position(HERE).title("I AM HERE"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(HERE));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(HERE, 15));
     }
 
 
     /*
-    * Update location will use the location manager to get the most recent GPS coordinates set in the device/emulator
-    * The response is processed in MyLocationListenerGPS
-    * */
+     * Update location will use the location manager to get the most recent GPS coordinates set in the device/emulator
+     * The response is processed in MyLocationListenerGPS
+     * */
     public void updateLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Display("Permission Error");
@@ -205,9 +216,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     }
 
     /*
-    * If the user has not granted the app the required permissions this code handles the request and response
-    * TODO: Perform some sort of error handling in case they say no and improve current error handling
-    * */
+     * If the user has not granted the app the required permissions this code handles the request and response
+     * TODO: Perform some sort of error handling in case they say no and improve current error handling
+     * */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
