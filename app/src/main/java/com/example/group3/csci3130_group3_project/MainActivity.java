@@ -13,6 +13,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -52,9 +54,12 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     Button logout_bt;
     TextView userName;
     private GoogleMap mMap;
+    private GoogleApiClient mGoogleApiClient;
     private LocationManager mLocationManager;
     public Location mCurrentLocation;
+    private LatLngBounds.Builder mBounds = new LatLngBounds.Builder();
 
+    //below is used for callbacks in permission checking
     private static final int REQUEST_FINE_LOCATION_ACCESS = 1;
 
 
@@ -75,7 +80,13 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         userName = findViewById(R.id.userEmail);
         userName.setText(user.getEmail());
 
-        // Code that allegedly checks for GPS Availability
+        //Connect to Google API client
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .build();
+        mGoogleApiClient.connect();
+
+        // Code that checks for enabled Location Services
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 !mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
@@ -114,11 +125,34 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        //Need to explicitly check for permission before accessing location
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_FINE_LOCATION_ACCESS);
+        }
+        mMap.setMyLocationEnabled(true);
 
-        // Add a marker in Sydney and move the camera
+        /* Add a marker in Sydney and move the camera
+        This code was for learning purposes only.
         LatLng dal = new LatLng(44.6366, -63.5917);
         mMap.addMarker(new MarkerOptions().position(dal).title("Dalhousie!"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(dal));
+        */
+        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+                LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
+                addPointToViewPort(ll);
+                // we only want to grab the location once, to allow the user to pan and zoom freely.
+                mMap.setOnMyLocationChangeListener(null);
+            }
+        });
+    }
+
+    private void addPointToViewPort(LatLng newPoint) {
+        mBounds.include(newPoint);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(mBounds.build(),
+                findViewById(R.id.searchBar).getHeight()));
     }
 
     public void mapSearch(View view) {

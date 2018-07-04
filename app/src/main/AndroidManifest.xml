@@ -55,7 +55,12 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"></activity>
-        <activity android:name=".Favorites"></activity>
+        <activity android:name=".FavoritesActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.group3.csci3130_group3_project.MainActivity" />
+        </activity>
     </application>
 
 
