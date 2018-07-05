@@ -44,13 +44,17 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.util.List;
 
 
-public class MainActivity extends BaseActivity implements OnMapReadyCallback {
+public class MainActivity extends BaseActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
     FirebaseAuth firebaseAuth;
+    public DatabaseReference firebaseReference;
+    public FirebaseDatabase firebaseDBInstance;
     Button logout_bt;
     TextView userName;
     private GoogleMap mMap;
@@ -79,6 +83,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         userName = findViewById(R.id.userEmail);
         userName.setText(user.getEmail());
+        firebaseDBInstance = FirebaseDatabase.getInstance();
 
         //Connect to Google API client
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -147,6 +152,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
                 mMap.setOnMyLocationChangeListener(null);
             }
         });
+        mMap.setOnMapLongClickListener(this);
     }
 
     private void addPointToViewPort(LatLng newPoint) {
@@ -206,6 +212,13 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
             return;
         }
         mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, new MyLocationListenerGPS(), null);
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        AddFavoriteDialog addFavoriteDialog = new AddFavoriteDialog();
+        addFavoriteDialog.setNewLocation(latLng);
+        addFavoriteDialog.show(getSupportFragmentManager(), "Favorites");
     }
 
     /*

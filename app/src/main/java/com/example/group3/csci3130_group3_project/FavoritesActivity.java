@@ -43,12 +43,12 @@ public class FavoritesActivity extends BaseActivity {
 
         //Set-up Firebase
         firebaseDBInstance = FirebaseDatabase.getInstance();
-        firebaseReference =  firebaseDBInstance.getReference("Favorites");
+        firebaseReference =  firebaseDBInstance.getReference("favorites");
 
         //Code to add recycler View below
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         options = new FirebaseRecyclerOptions.Builder<Favorite>().setQuery(query, Favorite.class).build();
-        query = firebaseDBInstance.getReference().child("Favorites");
+        query = firebaseDBInstance.getReference().child("favorites");
         firebaseAdapter = new FirebaseRecyclerAdapter<Favorite, FavoriteViewHolder>(options) {
             @Override
             public FavoriteViewHolder onCreateViewHolder(ViewGroup parent, int viewType){

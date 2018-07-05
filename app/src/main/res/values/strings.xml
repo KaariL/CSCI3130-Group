@@ -40,7 +40,21 @@
     <string name="schedule">My Schedule</string>
     <string name="services">Dal Services</string>
     <string name="title_activity_maps">Map</string>
+    <string name="locationSearchPrompt">Enter an location</string>
+    <string name="main_searchButton">Search!</string>
+    <string name="main_LocatioButton">My Location</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!--*********End navbar strings******-->
+
+    <!--**************Strings for Favorites Dialog Box *******-->
+    <string name="fav_addPrompt">Add location to Favorites</string>
+    <string name="fav_addPos">Add to Favorites</string>
+    <string name="fav_addNeg">Cancel</string>
+    <string name="fav_nickname">Enter a nickname</string>
+    <!--******************************************************-->
+
 
 </resources>
