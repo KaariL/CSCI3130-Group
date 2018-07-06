@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isFocusable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.*;
 
@@ -37,7 +38,6 @@ public class ExampleInstrumentedTest {
     @Before
     public void logIn() throws Exception  {
         loginActivity = mActivityTestRule.getActivity();
-        //Activity startActivity =  CredentialActivity.getActivity();
         Espresso.onView(withId(R.id.editText_name)).perform(ViewActions.typeText(goodUsername));
         Espresso.onView(withId(R.id.editText_psw)).perform(ViewActions.typeText(goodPassword));
         Espresso.onView(withId(R.id.button_login)).perform(ViewActions.click());
@@ -50,5 +50,12 @@ public class ExampleInstrumentedTest {
         Thread.sleep(5000);
         Espresso.onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
+    @Test
+    public void SearchBarIsFocusable()  throws InterruptedException{
+        Thread.sleep(2500);
+        Espresso.onView(withId(R.id.searchBar)).check(matches(isFocusable()));
+    }
+    @Test
+    public void
 
 }
