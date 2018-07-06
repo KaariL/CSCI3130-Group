@@ -15,9 +15,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isFocusable;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.*;
 
@@ -40,7 +43,7 @@ public class ExampleInstrumentedTest {
         loginActivity = mActivityTestRule.getActivity();
         Espresso.onView(withId(R.id.editText_name)).perform(ViewActions.typeText(goodUsername));
         Espresso.onView(withId(R.id.editText_psw)).perform(ViewActions.typeText(goodPassword));
-        Espresso.onView(withId(R.id.button_login)).perform(ViewActions.click());
+        Espresso.onView(withId(R.id.button_login)).perform(click());
         //this should redirect you to map
 
     }
@@ -55,7 +58,19 @@ public class ExampleInstrumentedTest {
         Thread.sleep(2500);
         Espresso.onView(withId(R.id.searchBar)).check(matches(isFocusable()));
     }
+
     @Test
-    public void
+    public void goToOtherActivity() throws InterruptedException{
+        Thread.sleep(3500);
+        Espresso.onView(withContentDescription("Navigate up")).perform(click());
+        Thread.sleep(500);
+        Espresso.onView(withContentDescription("Favorites")).perform(click());
+        Thread.sleep(2500);
+        Espresso.onView(withId(R.id.addressButton)).perform(click());
+        Thread.sleep(7000);
+        Espresso.onView(withId(R.id.map)).check(matches(isDisplayed()));
+
+    }
+
 
 }
