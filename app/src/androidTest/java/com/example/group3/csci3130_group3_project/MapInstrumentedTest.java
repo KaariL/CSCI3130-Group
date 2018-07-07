@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -22,6 +23,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isFocusable;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.*;
 
 /**
@@ -30,7 +32,7 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
+public class MapInstrumentedTest {
     String goodUsername = "kaari.landry@gmail.com";
     String goodPassword = "Agr34Tpw!";
     @Rule
@@ -54,22 +56,20 @@ public class ExampleInstrumentedTest {
         Espresso.onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
     @Test
-    public void SearchBarIsFocusable()  throws InterruptedException{
+    public void searchBarIsFocusable()  throws InterruptedException{
         Thread.sleep(2500);
         Espresso.onView(withId(R.id.searchBar)).check(matches(isFocusable()));
     }
 
     @Test
-    public void goToOtherActivity() throws InterruptedException{
-        Thread.sleep(3500);
+    public void toolBarFavoritesNavigates() throws InterruptedException{
+        Thread.sleep(7500);
         Espresso.onView(withContentDescription("Navigate up")).perform(click());
+        Thread.sleep(1500);
+        //Espresso.onView(ViewMatchers.withText("Favorites")).check(matches(isDisplayed()));
+        Espresso.onView(withText("Favorites")).perform(click());
         Thread.sleep(500);
-        Espresso.onView(withContentDescription("Favorites")).perform(click());
-        Thread.sleep(2500);
-        Espresso.onView(withId(R.id.addressButton)).perform(click());
-        Thread.sleep(7000);
-        Espresso.onView(withId(R.id.map)).check(matches(isDisplayed()));
-
+        Espresso.onView(withText("address")).check(matches(isDisplayed()));
     }
 
 
