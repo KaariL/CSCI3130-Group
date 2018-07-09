@@ -17,6 +17,8 @@ import android.widget.EditText;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -33,12 +35,18 @@ public class AddFavoriteDialog extends DialogFragment {
         newLocation = coordinates;
     }
     EditText nicknameField;
+    String uid;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        uid = user.getUid();
+        if(uid == null)
+            dismiss();
         builder.setView(inflater.inflate(R.layout.fragment_add_favorite_dialog, null)).
         setMessage(R.string.fav_addPrompt)
                 .setPositiveButton(R.string.fav_addPos, new DialogInterface.OnClickListener() {
@@ -49,12 +57,13 @@ public class AddFavoriteDialog extends DialogFragment {
                         if(newLocation != null){
                             String nickname = nicknameField.getText().toString();
                             if(nickname != null) {
-                                Favorite newFavorite = new Favorite(nickname, newLocation);
                                 firebaseDBInstance = FirebaseDatabase.getInstance();
-                                firebaseReference =  firebaseDBInstance.getReference("favorites");
+                                firebaseReference =  firebaseDBInstance.getReference();
                                 //Add to favorite list
+                                String favoriteId = firebaseReference.child(uid).child("favorites").push().getKey();
+                                Favorite newFavorite = new Favorite(favoriteId, nickname, newLocation);
                                 //Success listeners
-                                firebaseReference.child("favorites").setValue(newFavorite)
+                                firebaseReference.child(uid).child(favoriteId).setValue(newFavorite.toMap())
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
@@ -72,7 +81,7 @@ public class AddFavoriteDialog extends DialogFragment {
                                             }
                                         });
                                 //actual addition of new favorite
-                                firebaseReference.child("favorites").setValue(newFavorite);
+                                firebaseReference.child(favoriteId).setValue(newFavorite.toMap());
                             }
                         }
                     }

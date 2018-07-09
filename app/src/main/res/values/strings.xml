@@ -54,6 +54,10 @@
     <string name="fav_addPos">Add to Favorites</string>
     <string name="fav_addNeg">Cancel</string>
     <string name="fav_nickname">Enter a nickname</string>
+    <string name="fav_modPrompt">Favorite</string>
+    <string name="fav_modPos">Navigate</string>
+    <string name="fav_modNeg">Remove</string>
+    <string name="fav_modNeut">Cancel</string>
     <!--******************************************************-->
 
 

@@ -57,6 +57,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     public FirebaseDatabase firebaseDBInstance;
     Button logout_bt;
     TextView userName;
+    String uid;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private LocationManager mLocationManager;
@@ -83,6 +84,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         FirebaseUser user = firebaseAuth.getCurrentUser();
         userName = findViewById(R.id.userEmail);
         userName.setText(user.getEmail());
+        uid = user.getUid();
         firebaseDBInstance = FirebaseDatabase.getInstance();
 
         //Connect to Google API client
@@ -93,8 +95,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
 
         // Code that checks for enabled Location Services
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                !mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            mLocationManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER,true);
             // Build the alert dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Location Services Not Active");
@@ -110,7 +112,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
             alertDialog.setCanceledOnTouchOutside(false);
             alertDialog.show();
         }
-
 
         updateLocation();
 
@@ -162,26 +163,34 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     }
 
     public void mapSearch(View view) {
+        performSearch();
+    }
+    public void performSearch(){
         EditText locationSearch = (EditText) findViewById(R.id.searchBar);
         String location = locationSearch.getText().toString();
         List<Address> addressList = null;
 
-        if (location != null || !location.equals("")) {
-            Geocoder geocoder = new Geocoder(this);
-            try {
-                addressList = geocoder.getFromLocationName(location, 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (!addressList.isEmpty()) {
-                Address address = addressList.get(0);
-                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(latLng).title("User Search"));
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-            } else {
-                LatLng sydney = new LatLng(-34, 151);
-                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        if (location != null) {
+            if(!location.isEmpty()) {
+
+                Geocoder geocoder = new Geocoder(this);
+                try {
+                    addressList = geocoder.getFromLocationName(location, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(addressList != null) {
+                    if (!addressList.isEmpty()) {
+                        Address address = addressList.get(0);
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(latLng).title("User Search"));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                    } else {
+                        LatLng sydney = new LatLng(-34, 151);
+                        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
+                    }
+                }
             }
         }
     }
