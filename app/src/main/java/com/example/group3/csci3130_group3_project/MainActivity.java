@@ -13,6 +13,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,29 +28,39 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.util.List;
 
 
-public class MainActivity extends BaseActivity implements OnMapReadyCallback {
+public class MainActivity extends BaseActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
     FirebaseAuth firebaseAuth;
+    public DatabaseReference firebaseReference;
+    public FirebaseDatabase firebaseDBInstance;
     Button logout_bt;
     TextView userName;
+    String uid;
     private GoogleMap mMap;
+    private GoogleApiClient mGoogleApiClient;
     private LocationManager mLocationManager;
     public Location mCurrentLocation;
-
+    private LatLngBounds.Builder mBounds = new LatLngBounds.Builder();
     public String receivedAddress;
 
+    //below is used for callbacks in permission checking
     private static final int REQUEST_FINE_LOCATION_ACCESS = 1;
 
 
@@ -69,8 +80,17 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         userName = findViewById(R.id.userEmail);
         userName.setText(user.getEmail());
+        uid = user.getUid();
+        firebaseDBInstance = FirebaseDatabase.getInstance();
+
 
         // Code that checks for GPS Availability
+        //Connect to Google API client
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .build();
+        mGoogleApiClient.connect();
+        // Code that checks for enabled Location Services
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             mLocationManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER,true);
@@ -89,6 +109,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
             alertDialog.setCanceledOnTouchOutside(false);
             alertDialog.show();
         }
+
 
         receivedAddress = (String)getIntent().getStringExtra("Address");
         updateLocation();
@@ -110,6 +131,13 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        //Need to explicitly check for permission before accessing location
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_FINE_LOCATION_ACCESS);
+        }
+        mMap.setMyLocationEnabled(true);
+
 
         if(receivedAddress!=null){
             EditText locationSearch = (EditText) findViewById(R.id.searchBar);
@@ -122,6 +150,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         LatLng dal = new LatLng(44.6366, -63.5917);
         mMap.addMarker(new MarkerOptions().position(dal).title("Dalhousie!"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dal, 15));
+
     }
 
     public void mapSearch(View view) {
@@ -183,6 +212,13 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
             return;
         }
         mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, new MyLocationListenerGPS(), null);
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        AddFavoriteDialog addFavoriteDialog = new AddFavoriteDialog();
+        addFavoriteDialog.setNewLocation(latLng);
+        addFavoriteDialog.show(getSupportFragmentManager(), "Favorites");
     }
 
     /*
