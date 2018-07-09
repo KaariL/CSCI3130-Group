@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,12 +27,11 @@ public abstract class BaseActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        addNavBar();
     }
     public void addNavBar() {
         setContentView(R.layout.activity_base);
         mDrawerLayout = findViewById(R.id.drawer_layout);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
@@ -50,6 +51,12 @@ public abstract class BaseActivity extends AppCompatActivity{
                         //Intent loginIntent = new Intent(this,LoginActivity.class);
                         if(menuItem.getItemId() == R.id.nav_logout){
                             logout();
+                        }
+                        if(menuItem.getItemId() == R.id.nav_favorites){
+                            showFavorites();
+                        }
+                        if(menuItem.getItemId() == R.id.nav_services){
+                            showMain();
                         }
                         return true;
                     }
@@ -81,8 +88,20 @@ public abstract class BaseActivity extends AppCompatActivity{
             Intent logout = new Intent(BaseActivity.this, CredentialActivity.class);
             finish();
             startActivity(logout);
-
-
     }
+
+
+    public void showFavorites() {
+        finish();
+        Intent i = new Intent(this,FavoritesActivity.class);
+        startActivity(i);
+    }
+
+    public void showMain() {
+        finish();
+        Intent i = new Intent(this,MainActivity.class);
+        startActivity(i);
+    }
+
 
 }
