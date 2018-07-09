@@ -53,7 +53,7 @@ public abstract class BaseActivity extends AppCompatActivity{
                             logout();
                         }
                         if(menuItem.getItemId() == R.id.nav_favorites){
-                            showFavs();
+                            showFavorites();
                         }
                         if(menuItem.getItemId() == R.id.nav_services){
                             showMain();
@@ -90,9 +90,10 @@ public abstract class BaseActivity extends AppCompatActivity{
             startActivity(logout);
     }
 
-    public void showFavs() {
+
+    public void showFavorites() {
         finish();
-        Intent i = new Intent(this,Favorites.class);
+        Intent i = new Intent(this,FavoritesActivity.class);
         startActivity(i);
     }
 
