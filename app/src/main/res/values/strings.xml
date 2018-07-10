@@ -40,7 +40,35 @@
     <string name="schedule">My Schedule</string>
     <string name="services">Dal Services</string>
     <string name="title_activity_maps">Map</string>
+    <string name="locationSearchPrompt">Enter an location</string>
+    <string name="main_searchButton">Search!</string>
+    <string name="main_LocatioButton">My Location</string>
+    <string name="nav_home">Home</string>
 
     <!--*********End navbar strings******-->
+
+    <!--**************Strings for Favorites Dialog Box *******-->
+    <string name="fav_addPrompt">Add location to Favorites</string>
+    <string name="fav_addPos">Add to Favorites</string>
+    <string name="fav_addNeg">Cancel</string>
+    <string name="fav_nickname">Enter a nickname</string>
+    <string name="fav_modPrompt">Favorite</string>
+    <string name="fav_modPos">Navigate</string>
+    <string name="fav_modNeg">Remove</string>
+    <string name="fav_modNeut">Cancel</string>
+    <string name="profile_userNameHint">Username</string>
+    <string name="profile_favColorHint">Favorite color (6 digits)</string>
+    <string name="profile_updateButtonPrompt">Update Data</string>
+    <string name="profile_updatePasswordPrompt">Update Password</string>
+    <string name="register_usernamePrompt">Enter a username (optional)</string>
+    <string name="register_favoriteColorPrompt">What\'s your favorite color? (optional)</string>
+    <string name="nav_profilePrompt">Profile</string>
+    <string name="changePass_oldPassPrompt">Enter old password</string>
+    <string name="changePass_newPassPrompt">Enter new password</string>
+    <string name="changePass_confirmPassPrompt">Confirm new password</string>
+    <string name="changePass_message">Change your password</string>
+    <string name="changePass_pos">Update Password</string>
+    <!--******************************************************-->
+
 
 </resources>

@@ -49,14 +49,20 @@ public abstract class BaseActivity extends AppCompatActivity{
                         // Add code here to update the UI based on the item selected
                         // For example, swap UI fragments here
                         //Intent loginIntent = new Intent(this,LoginActivity.class);
+                        if(menuItem.getItemId() == R.id.nav_home){
+                            showMain();
+                        }
                         if(menuItem.getItemId() == R.id.nav_logout){
                             logout();
                         }
                         if(menuItem.getItemId() == R.id.nav_favorites){
-                            showFavs();
+                            showFavorites();
                         }
                         if(menuItem.getItemId() == R.id.nav_services){
-                            showMain();
+                            launchServices();
+                        }
+                        if(menuItem.getItemId() == R.id.nav_profile){
+                            showProfile();
                         }
                         return true;
                     }
@@ -90,9 +96,10 @@ public abstract class BaseActivity extends AppCompatActivity{
             startActivity(logout);
     }
 
-    public void showFavs() {
+
+    public void showFavorites() {
         finish();
-        Intent i = new Intent(this,Favorites.class);
+        Intent i = new Intent(this,FavoritesActivity.class);
         startActivity(i);
     }
 
@@ -101,6 +108,15 @@ public abstract class BaseActivity extends AppCompatActivity{
         Intent i = new Intent(this,MainActivity.class);
         startActivity(i);
     }
+    public void launchServices() {
+        finish();
+        startActivity(new Intent(this, ServicesCardView.class));
+    }
+    public void showProfile(){
+        finish();
+        startActivity(new Intent(this, ProfileActivity.class));
+    }
+
 
 
 }

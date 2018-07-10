@@ -13,10 +13,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
+import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,24 +39,35 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends BaseActivity implements OnMapReadyCallback {
+public class MainActivity extends BaseActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
     FirebaseAuth firebaseAuth;
-    Button logout_bt;
-    TextView userName;
+    public DatabaseReference firebaseReference;
+    public FirebaseDatabase firebaseDBInstance;
+    //Button logout_bt;
+   // TextView userName;
+    String uid;
     private GoogleMap mMap;
+    private GoogleApiClient mGoogleApiClient;
     private LocationManager mLocationManager;
     public Location mCurrentLocation;
+    private LatLngBounds.Builder mBounds = new LatLngBounds.Builder();
 
+    //below is used for callbacks in permission checking
     private static final int REQUEST_FINE_LOCATION_ACCESS = 1;
 
 
@@ -72,13 +85,21 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
             startActivity(new Intent(this, CredentialActivity.class));
         }
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        userName = findViewById(R.id.userEmail);
-        userName.setText(user.getEmail());
+       // userName = findViewById(R.id.userEmail);
+       // userName.setText(user.getEmail());
+        uid = user.getUid();
+        firebaseDBInstance = FirebaseDatabase.getInstance();
 
-        // Code that allegedly checks for GPS Availability
+        //Connect to Google API client
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .build();
+        mGoogleApiClient.connect();
+
+        // Code that checks for enabled Location Services
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                !mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            mLocationManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER,true);
             // Build the alert dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Location Services Not Active");
@@ -95,8 +116,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
             alertDialog.show();
         }
 
-
         updateLocation();
+
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -106,7 +127,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         updateLocation();
     }
@@ -114,40 +135,94 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        UiSettings settings = mMap.getUiSettings();
+        settings.setZoomControlsEnabled(true);
+        //Need to explicitly check for permission before accessing location
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_FINE_LOCATION_ACCESS);
+        }
+        mMap.setMyLocationEnabled(true);
 
-        // Add a marker in Sydney and move the camera
+        /* Add a marker in Sydney and move the camera
+        This code was for learning purposes only.
         LatLng dal = new LatLng(44.6366, -63.5917);
         mMap.addMarker(new MarkerOptions().position(dal).title("Dalhousie!"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(dal));
+        */
+        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+                LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
+                addPointToViewPort(ll);
+                // we only want to grab the location once, to allow the user to pan and zoom freely.
+                mMap.setOnMyLocationChangeListener(null);
+            }
+        });
+        mMap.setOnMapLongClickListener(this);
+        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                if(getIntent().hasExtra("Favorite")) {
+                    Favorite sentFavorite = (Favorite) getIntent().getSerializableExtra("Favorite");
+                    if (sentFavorite != null) {
+                        String message = String.format("%f, %f; %s", sentFavorite.getmLatitude(), sentFavorite.getmLongitude(), sentFavorite.getName());
+                        LatLng sentLocation = new LatLng(sentFavorite.getmLatitude(), sentFavorite.getmLongitude());
+                        Log.d("Favorite coordinates:", message);
+                        mMap.addMarker(new MarkerOptions().position(sentLocation));
+                        addPointToViewPort(sentLocation);
+                    }
+                }
+            }
+        });
+
+
+
+    }
+
+    private void addPointToViewPort(LatLng newPoint) {
+        mBounds.include(newPoint);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(mBounds.build(),
+                findViewById(R.id.searchBar).getHeight()));
     }
 
     public void mapSearch(View view) {
+        performSearch();
+    }
+    public void performSearch(){
         EditText locationSearch = (EditText) findViewById(R.id.searchBar);
         String location = locationSearch.getText().toString();
         List<Address> addressList = null;
 
-        if (location != null || !location.equals("")) {
-            Geocoder geocoder = new Geocoder(this);
-            try {
-                addressList = geocoder.getFromLocationName(location, 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (!addressList.isEmpty()) {
-                Address address = addressList.get(0);
-                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(latLng).title("User Search"));
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-            } else {
-                LatLng sydney = new LatLng(-34, 151);
-                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        if (location != null) {
+            if(!location.isEmpty()) {
+
+                Geocoder geocoder = new Geocoder(this);
+                try {
+                    addressList = geocoder.getFromLocationName(location, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(addressList != null) {
+                    if (!addressList.isEmpty()) {
+                        Address address = addressList.get(0);
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(latLng).title("User Search"));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                    } else {
+                        LatLng sydney = new LatLng(-34, 151);
+                        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
+                    }
+                }
             }
         }
     }
 
 
     //Sets the location on map to the one described in the global mCurrentLocation
+  /*Commented out this method as GoogleMaps provides a UI element which does the same thing
     public void FIND(View view) {
         if (mCurrentLocation == null) {
             Display("Current Location NULL");
@@ -157,7 +232,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         mMap.addMarker(new MarkerOptions().position(HERE).title("I AM HERE"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(HERE));
     }
-
+    *****************************************************************************/
 
     /*
     * Update location will use the location manager to get the most recent GPS coordinates set in the device/emulator
@@ -165,7 +240,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
     * */
     public void updateLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Display("Permission Error");
+          //  Display("Permission Error");
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_FINE_LOCATION_ACCESS);
@@ -174,33 +249,41 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, new MyLocationListenerGPS(), null);
     }
 
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        AddFavoriteDialog addFavoriteDialog = new AddFavoriteDialog();
+        addFavoriteDialog.setNewLocation(latLng);
+        addFavoriteDialog.show(getSupportFragmentManager(), "Favorites");
+    }
+
     /*
      * After updateLocation() has been called MyLocationListenerGPS handles the responses to the update
      * Once the location is received it updates the global mCurrentLocation via the location manager
-     * */
+      */
+
     public class MyLocationListenerGPS implements LocationListener {
         @SuppressLint("MissingPermission")
         @Override
         public void onLocationChanged(Location location) {
-            Display("Location Changed!");
+           // Display("Location Changed!");
             mCurrentLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
 
         @SuppressLint("MissingPermission")
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            Display("Status change");
+         //   Display("Status change");
             mCurrentLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
 
         @Override
         public void onProviderEnabled(String provider) {
-            Display("provider change");
+           // Display("provider change");
         }
 
         @Override
         public void onProviderDisabled(String provider) {
-            Display("provider died");
+            //Display("provider died");
         }
     }
 
@@ -222,8 +305,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback {
         }
     }
 
-    public void Display(String e) {
+  /*  public void Display(String e) {
         TextView st = (TextView) findViewById(R.id.statusText);
         st.setText(e);
-    }
+    } */
 }

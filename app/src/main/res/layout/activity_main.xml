@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
 
-    <TextView
+   <!-- <TextView
         android:id="@+id/userEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,14 +15,14 @@
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" /> -->
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="300dp"
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +39,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:ems="10"
-        android:hint="Enter an location"
+        android:hint="@string/locationSearchPrompt"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/map"
         app:layout_constraintStart_toStartOf="parent" />
@@ -52,11 +52,11 @@
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:onClick="mapSearch"
-        android:text="Search!"
+        android:text="@string/main_searchButton"
         app:layout_constraintBottom_toTopOf="@+id/map"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+   <!-- <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,11 +64,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:onClick="FIND"
-        android:text="My Location"
+        android:text="@string/main_LocatioButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/map" />
+        app:layout_constraintTop_toBottomOf="@+id/map" /> -->
 
-    <TextView
+
+   <!-- <TextView
         android:id="@+id/statusText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,6 +78,6 @@
         android:layout_marginStart="8dp"
         android:text="Code State"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" /> -->
 
 </android.support.constraint.ConstraintLayout>
