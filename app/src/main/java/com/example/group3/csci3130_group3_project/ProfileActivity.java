@@ -88,6 +88,8 @@ public class ProfileActivity extends BaseActivity {
             }
         };
         firebaseReference.child(user.getUid()).addChildEventListener(userListener);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
@@ -117,8 +119,12 @@ public class ProfileActivity extends BaseActivity {
                         }
                     });
             firebaseReference.child(uid).child(profileId).setValue(profile);
-            
+
         }
+    }
+    public void changePassword(View view){
+        ChangePasswordDialog changePasswordDialog = new ChangePasswordDialog();
+        changePasswordDialog.show(getSupportFragmentManager(), "ChangePass");
     }
 }
 

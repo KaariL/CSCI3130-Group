@@ -38,6 +38,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -55,8 +56,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     FirebaseAuth firebaseAuth;
     public DatabaseReference firebaseReference;
     public FirebaseDatabase firebaseDBInstance;
-    Button logout_bt;
-    TextView userName;
+    //Button logout_bt;
+   // TextView userName;
     String uid;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -82,8 +83,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
             startActivity(new Intent(this, CredentialActivity.class));
         }
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        userName = findViewById(R.id.userEmail);
-        userName.setText(user.getEmail());
+       // userName = findViewById(R.id.userEmail);
+       // userName.setText(user.getEmail());
         uid = user.getUid();
         firebaseDBInstance = FirebaseDatabase.getInstance();
 
@@ -131,6 +132,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        UiSettings settings = mMap.getUiSettings();
+        settings.setZoomControlsEnabled(true);
         //Need to explicitly check for permission before accessing location
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -197,6 +201,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
 
 
     //Sets the location on map to the one described in the global mCurrentLocation
+  /*Commented out this method as GoogleMaps provides a UI element which does the same thing
     public void FIND(View view) {
         if (mCurrentLocation == null) {
             Display("Current Location NULL");
@@ -206,7 +211,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         mMap.addMarker(new MarkerOptions().position(HERE).title("I AM HERE"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(HERE));
     }
-
+    *****************************************************************************/
 
     /*
     * Update location will use the location manager to get the most recent GPS coordinates set in the device/emulator
@@ -214,7 +219,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     * */
     public void updateLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Display("Permission Error");
+          //  Display("Permission Error");
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_FINE_LOCATION_ACCESS);
@@ -233,30 +238,31 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     /*
      * After updateLocation() has been called MyLocationListenerGPS handles the responses to the update
      * Once the location is received it updates the global mCurrentLocation via the location manager
-     * */
+      */
+
     public class MyLocationListenerGPS implements LocationListener {
         @SuppressLint("MissingPermission")
         @Override
         public void onLocationChanged(Location location) {
-            Display("Location Changed!");
+           // Display("Location Changed!");
             mCurrentLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
 
         @SuppressLint("MissingPermission")
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            Display("Status change");
+         //   Display("Status change");
             mCurrentLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
 
         @Override
         public void onProviderEnabled(String provider) {
-            Display("provider change");
+           // Display("provider change");
         }
 
         @Override
         public void onProviderDisabled(String provider) {
-            Display("provider died");
+            //Display("provider died");
         }
     }
 
@@ -278,8 +284,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         }
     }
 
-    public void Display(String e) {
+  /*  public void Display(String e) {
         TextView st = (TextView) findViewById(R.id.statusText);
         st.setText(e);
-    }
+    } */
 }

@@ -45,9 +45,6 @@
     <string name="main_LocatioButton">My Location</string>
     <string name="nav_home">Home</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <!--*********End navbar strings******-->
 
     <!--**************Strings for Favorites Dialog Box *******-->
@@ -66,6 +63,11 @@
     <string name="register_usernamePrompt">Enter a username (optional)</string>
     <string name="register_favoriteColorPrompt">What\'s your favorite color? (optional)</string>
     <string name="nav_profilePrompt">Profile</string>
+    <string name="changePass_oldPassPrompt">Enter old password</string>
+    <string name="changePass_newPassPrompt">Enter new password</string>
+    <string name="changePass_confirmPassPrompt">Confirm new password</string>
+    <string name="changePass_message">Change your password</string>
+    <string name="changePass_pos">Update Password</string>
     <!--******************************************************-->
 
 
