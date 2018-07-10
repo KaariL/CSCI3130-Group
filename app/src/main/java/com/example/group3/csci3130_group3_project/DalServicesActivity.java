@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -43,7 +44,7 @@ public class DalServicesActivity extends AppCompatActivity {
         //******************************************************
         adapters=new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,list);
         listView.setAdapter(adapters);
-        databaseReference= FirebaseDatabase.getInstance().getReference(select);
+        databaseReference= FirebaseDatabase.getInstance().getReference().child("facilities").child(select);
 
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -52,6 +53,7 @@ public class DalServicesActivity extends AppCompatActivity {
                 list.add(value);
                 adapters.notifyDataSetChanged();
                 String n=dataSnapshot.child("name").getValue(String.class);
+                Log.d("name from building:", n);
                 namelist.add(n);
                 String lo=dataSnapshot.child("loca").getValue(String.class);
                 locatonlist.add(lo);

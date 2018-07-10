@@ -87,7 +87,7 @@ public class ProfileActivity extends BaseActivity {
 
             }
         };
-        firebaseReference.child(user.getUid()).addChildEventListener(userListener);
+        firebaseReference.child("users").child(user.getUid()).child("userprofile").addChildEventListener(userListener);
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -105,7 +105,7 @@ public class ProfileActivity extends BaseActivity {
         if (profileId != null) {
 
 
-            firebaseReference.child(uid).child(profileId).setValue(profile).addOnSuccessListener(new OnSuccessListener<Void>() {
+            firebaseReference.child("users").child(uid).child("userprofile").child(profileId).setValue(profile).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Log.d("update", "Success");
@@ -118,7 +118,7 @@ public class ProfileActivity extends BaseActivity {
                             Log.d("update", "Update Failed: " + error);
                         }
                     });
-            firebaseReference.child(uid).child(profileId).setValue(profile);
+            firebaseReference.child("users").child(uid).child("userprofile").child(profileId).setValue(profile);
 
         }
     }

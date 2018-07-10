@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ public class FavoritesActivity extends BaseActivity implements View.OnClickListe
                     if(selectedFavorite != null) {
                         ModifyFavoriteDialogue modifyFavoriteDialogue = new ModifyFavoriteDialogue();
                         modifyFavoriteDialogue.setSelectedFavorite(selectedFavorite);
+                        Log.d("favorite pass", String.format("latitude %f longitude %f",selectedFavorite.getmLatitude(),selectedFavorite.getmLongitude()));
                         modifyFavoriteDialogue.show(getSupportFragmentManager(), "Favorite");
                     }
                     else{
@@ -76,7 +78,7 @@ public class FavoritesActivity extends BaseActivity implements View.OnClickListe
 
         //Code to add recycler View below
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        query = firebaseDBInstance.getReference().child(uid);
+        query = firebaseDBInstance.getReference().child("users").child(uid).child("favorites");
         options = new FirebaseRecyclerOptions.Builder<Favorite>().setQuery(query, Favorite.class).build();
         firebaseAdapter = new FirebaseRecyclerAdapter<Favorite, FavoriteViewHolder>(options) {
             @Override

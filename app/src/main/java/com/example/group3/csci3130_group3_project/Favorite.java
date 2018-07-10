@@ -2,23 +2,29 @@ package com.example.group3.csci3130_group3_project;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Favorite {
+public class Favorite implements Serializable {
     private String mId;
     private String mName;
     private double mLongitude;
     private double mLatitude;
-    private LatLng mCoordinates;
+
     public Favorite(){}
     public Favorite(String id, String name, LatLng location){
         mId = id;
         mName = name;
-        mCoordinates = location;
         mLatitude = location.latitude;
         mLongitude = location.longitude;
 
+    }
+    public Favorite(String id, String name, double latitude, double longitude){
+        mId = id;
+        mName = name;
+        mLatitude = latitude;
+        mLongitude = longitude;
     }
 
     public String getName(){
@@ -28,15 +34,29 @@ public class Favorite {
         mName = s;
     }
 
-    public double[] getLocation(){
-        double[] location = {mLongitude, mLatitude};
-        return location;
-    }
+
     public void setLocation(LatLng location){
-        mCoordinates = location;
         mLongitude = location.longitude;
         mLatitude = location.latitude;
     }
+
+ /*   public LatLng getmCoordinates() {
+        LatLng mCoordinates = new LatLng(mLatitude, mLongitude);
+        return mCoordinates;
+    } */
+    public void setmLongitude(double longitude){
+        mLongitude = longitude;
+    }
+    public double getmLongitude(){
+        return this.mLongitude;
+    }
+    public void setmLatitude(double latitude){
+        mLongitude = latitude;
+    }
+    public double getmLatitude(){
+        return this.mLatitude;
+    }
+
     public String getId(){ return mId; }
     public void setId(String id){
         mId = id;

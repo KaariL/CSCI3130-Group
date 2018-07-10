@@ -61,9 +61,9 @@ public class RegisterActivity extends AppCompatActivity {
                             if(favoriteColor == null){
                                 favoriteColor = "";
                             }
-                            String profileId = firebaseReference.child(user.getUid()).child("profile").push().getKey();
+                            String profileId = firebaseReference.child("users").child(user.getUid()).child("userprofile").child("profile").push().getKey();
                             UserProfile newUser = new UserProfile(profileId, username, favoriteColor);
-                            firebaseReference.child(user.getUid()).child(profileId).setValue(newUser);
+                            firebaseReference.child("users").child(user.getUid()).child("userprofile").child(profileId).setValue(newUser);
 
                             RegisterActivity.this.finish();
                             CredentialActivity.credentialPage.finish();

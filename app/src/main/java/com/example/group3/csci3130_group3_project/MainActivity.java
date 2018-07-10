@@ -18,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
+import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -117,6 +119,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         updateLocation();
 
 
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -124,7 +127,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         updateLocation();
     }
@@ -158,6 +161,24 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
             }
         });
         mMap.setOnMapLongClickListener(this);
+        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                if(getIntent().hasExtra("Favorite")) {
+                    Favorite sentFavorite = (Favorite) getIntent().getSerializableExtra("Favorite");
+                    if (sentFavorite != null) {
+                        String message = String.format("%f, %f; %s", sentFavorite.getmLatitude(), sentFavorite.getmLongitude(), sentFavorite.getName());
+                        LatLng sentLocation = new LatLng(sentFavorite.getmLatitude(), sentFavorite.getmLongitude());
+                        Log.d("Favorite coordinates:", message);
+                        mMap.addMarker(new MarkerOptions().position(sentLocation));
+                        addPointToViewPort(sentLocation);
+                    }
+                }
+            }
+        });
+
+
+
     }
 
     private void addPointToViewPort(LatLng newPoint) {

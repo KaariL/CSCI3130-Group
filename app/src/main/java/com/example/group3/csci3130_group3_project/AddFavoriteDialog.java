@@ -60,11 +60,11 @@ public class AddFavoriteDialog extends DialogFragment {
                                 firebaseDBInstance = FirebaseDatabase.getInstance();
                                 firebaseReference =  firebaseDBInstance.getReference();
                                 //Add to favorite list
-                                String favoriteId = firebaseReference.child(uid).child("favorites").push().getKey();
+                                String favoriteId = firebaseReference.child("users").child(uid).child("favorites").child("favorite").push().getKey();
                                 Favorite newFavorite = new Favorite(favoriteId, nickname, newLocation);
 
                                 //Success listeners
-                                firebaseReference.child(uid).child(favoriteId).setValue(newFavorite.toMap())
+                                firebaseReference.child("users").child(uid).child("favorites").child(favoriteId).setValue(newFavorite)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
@@ -81,8 +81,7 @@ public class AddFavoriteDialog extends DialogFragment {
                                                 Log.d(TAG, "Write Failed: " + error);
                                             }
                                         });
-                                //actual addition of new favorite
-                                firebaseReference.child(favoriteId).setValue(newFavorite.toMap());
+
                             }
                         }
                     }

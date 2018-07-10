@@ -4,6 +4,7 @@ package com.example.group3.csci3130_group3_project;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -25,6 +26,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
@@ -61,13 +65,16 @@ public class ModifyFavoriteDialogue extends DialogFragment {
 
         builder.setView(inflater.inflate(R.layout.fragment_modify_favorite_dialogue, null)).
                 setMessage(selectedFavorite.getName());
-
         builder.setPositiveButton(R.string.fav_modPos, new DialogInterface.OnClickListener() {
 
                     //Click the positive action button
                     //navigate
+                    @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        dismiss();
+                        Intent intent = new Intent(getContext(), MainActivity.class);
+                        Log.d("dialog put:", selectedFavorite.getName());
+                        intent.putExtra("Favorite", selectedFavorite);
+                        getContext().startActivity(intent);
                     }
                 })
                 .setNeutralButton(R.string.fav_modNeut, new DialogInterface.OnClickListener() {
@@ -81,12 +88,12 @@ public class ModifyFavoriteDialogue extends DialogFragment {
                         firebaseDBInstance = FirebaseDatabase.getInstance();
                         firebaseReference =  firebaseDBInstance.getReference();
                         favId = selectedFavorite.getId();
-                        firebaseReference.child(uid).child(favId).removeValue()
+                        firebaseReference.child("users").child(uid).child("favorites").child(favId).removeValue()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         // Write was successful!
-                                        Log.d(TAG, "Write Successful");
+                                        Log.d("remove", "Write Successful");
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -95,10 +102,10 @@ public class ModifyFavoriteDialogue extends DialogFragment {
                                         // Write failed
                                         // ...
                                         String error = e.getMessage() + ": " + e.getCause();
-                                        Log.d(TAG, "Write Failed: " + error);
+                                        Log.d("remove", "Write Failed: " + error);
                                     }
                                 });
-                        firebaseReference.child(uid).child(favId).removeValue();
+
                     }
                 });
         // Create the AlertDialog object and return it
