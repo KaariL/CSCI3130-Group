@@ -62,6 +62,7 @@ public class AddFavoriteDialog extends DialogFragment {
                                 //Add to favorite list
                                 String favoriteId = firebaseReference.child(uid).child("favorites").push().getKey();
                                 Favorite newFavorite = new Favorite(favoriteId, nickname, newLocation);
+
                                 //Success listeners
                                 firebaseReference.child(uid).child(favoriteId).setValue(newFavorite.toMap())
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {

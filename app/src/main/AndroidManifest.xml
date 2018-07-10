@@ -6,8 +6,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -54,15 +53,18 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
-        <activity android:name=".FavoritesActivity"
+            android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".FavoritesActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.group3.csci3130_group3_project.MainActivity" />
         </activity>
+        <activity android:name=".DalServicesActivity" />
+        <activity android:name=".ServicesCardView" />
+        <activity android:name=".Detail" />
+        <activity android:name=".ProfileActivity"></activity>
     </application>
-
-
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.example.group3.csci3130_group3_project;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -17,12 +18,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class RegisterActivity extends AppCompatActivity {
     protected registrationValidator validator;
     protected boolean formIsValid;
     private FirebaseAuth mAuth;
+    public DatabaseReference firebaseReference;
+    public FirebaseDatabase firebaseDBInstance;
     private static final String TAG = "Register";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,21 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success");
                             Intent main = new Intent(RegisterActivity.this, MainActivity.class);
                             FirebaseUser user = mAuth.getCurrentUser();
+                            firebaseDBInstance = FirebaseDatabase.getInstance();
+                            firebaseReference =  firebaseDBInstance.getReference();
+
+                            String username = getUsernameField();
+                            String favoriteColor = getFavoriteColor();
+                            if(username == null){
+                                username = "";
+                            }
+                            if(favoriteColor == null){
+                                favoriteColor = "";
+                            }
+                            String profileId = firebaseReference.child(user.getUid()).child("profile").push().getKey();
+                            UserProfile newUser = new UserProfile(profileId, username, favoriteColor);
+                            firebaseReference.child(user.getUid()).child(profileId).setValue(newUser);
+
                             RegisterActivity.this.finish();
                             CredentialActivity.credentialPage.finish();
                             startActivity(main);
@@ -88,6 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
         if(formIsValid){
             createNewUser(this.getEmailField(), getPasswordField());
+
         }
 
     }
@@ -95,17 +116,25 @@ public class RegisterActivity extends AppCompatActivity {
         TextView email = findViewById(R.id.emailText);
         TextView password = findViewById(R.id.passwordText);
         TextView confirmPass = findViewById(R.id.confirmPasswordText);
-        email.setText(R.string.emailRegDefault);
+        email.setText("");
         email.setTextColor(getResources().getColor(R.color.colorPrimary));
-        password.setText(R.string.passwordRegDefault);
+        password.setText("");
         password.setTextColor(getResources().getColor(R.color.colorPrimary));
-        confirmPass.setText(R.string.confirmPassRegDefault);
+        confirmPass.setText("");
         confirmPass.setTextColor(getResources().getColor(R.color.colorPrimary));
 
+    }
+    public String getUsernameField(){
+        EditText username =(EditText) findViewById(R.id.register_username);
+        return username.getText().toString();
     }
     public String getEmailField(){
         EditText email = (EditText) findViewById(R.id.email);
         return email.getText().toString();
+    }
+    public String getFavoriteColor(){
+        EditText favColor = (EditText) findViewById(R.id.register_favoriteColor);
+        return favColor.getText().toString();
     }
     public String getPasswordField(){
         EditText password = (EditText) findViewById(R.id.password);

@@ -2,17 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_schedule"
-            android:icon="@drawable/ic_account"
-            android:title="@string/schedule" />
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="@string/nav_home" />
         <item
             android:id="@+id/nav_services"
             android:icon="@drawable/ic_map"
             android:title="@string/services" />
         <item
             android:id="@+id/nav_favorites"
-            android:icon="@drawable/ic_home"
+            android:icon="@drawable/ic_account"
             android:title="@string/favorites" />
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/common_google_signin_btn_icon_light"
+            android:title="@string/nav_profilePrompt"/>
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_out"
