@@ -1,6 +1,7 @@
 package com.example.group3.csci3130_group3_project;
 
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -63,6 +64,8 @@ public abstract class BaseActivity extends AppCompatActivity{
                         }
                         if(menuItem.getItemId() == R.id.nav_profile){
                             showProfile();
+
+
                         }
                         return true;
                     }
@@ -79,10 +82,10 @@ public abstract class BaseActivity extends AppCompatActivity{
     }
     public void setActivityLayout(int id) {
         LayoutInflater inflater = getLayoutInflater();
-        FrameLayout frameLayout = findViewById(R.id.content_frame);
+        ConstraintLayout linearLayout = findViewById(R.id.content_frame);
         View layout = findViewById(id);
-        frameLayout.addView(inflater.inflate(id, null), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-                ViewGroup.LayoutParams.FILL_PARENT));
+        linearLayout.addView(inflater.inflate(id, null), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
 
     }
     public void logout() {
@@ -109,7 +112,7 @@ public abstract class BaseActivity extends AppCompatActivity{
         startActivity(i);
     }
     public void launchServices() {
-        finish();
+        //finish();
         startActivity(new Intent(this, ServicesCardView.class));
     }
     public void showProfile(){
