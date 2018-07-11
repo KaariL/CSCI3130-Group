@@ -51,7 +51,7 @@ public class Favorite implements Serializable {
         return this.mLongitude;
     }
     public void setmLatitude(double latitude){
-        mLongitude = latitude;
+        mLatitude = latitude;
     }
     public double getmLatitude(){
         return this.mLatitude;
