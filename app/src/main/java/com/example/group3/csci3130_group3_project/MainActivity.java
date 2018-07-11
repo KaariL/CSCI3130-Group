@@ -174,6 +174,10 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                         addPointToViewPort(sentLocation);
                     }
                 }
+                if(getIntent().hasExtra("Address")){
+                    String location = (String) getIntent().getSerializableExtra("Address");
+                    performSearch(location);
+                }
             }
         });
 
@@ -195,6 +199,33 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         String location = locationSearch.getText().toString();
         List<Address> addressList = null;
 
+        if (location != null) {
+            if(!location.isEmpty()) {
+
+                Geocoder geocoder = new Geocoder(this);
+                try {
+                    addressList = geocoder.getFromLocationName(location, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(addressList != null) {
+                    if (!addressList.isEmpty()) {
+                        Address address = addressList.get(0);
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(latLng).title("User Search"));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                    } else {
+                        LatLng sydney = new LatLng(-34, 151);
+                        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
+                    }
+                }
+            }
+        }
+    }
+    public void performSearch(String input){
+        List<Address> addressList = null;
+        String location = input;
         if (location != null) {
             if(!location.isEmpty()) {
 
