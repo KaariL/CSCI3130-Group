@@ -1,6 +1,10 @@
 package com.example.group3.csci3130_group3_project;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -83,10 +87,44 @@ public class CourseDisplayActivity extends BaseActivity {
                 selection.name = firebaseAdapter.getRef(position).getKey();
                 Log.d("myTag", selection.name);
                 //firebaseDBInstance.getReference("users").child()
+                popUP(selection);
             }
         });
 
 
+    }
+
+    public void popUP(Course c){
+        final Course C = c;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(c.name +"\n"+ c.description);
+        builder.setMessage("Please choose one of these options:");
+        builder.setNegativeButton("Navigate", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                goToMain(C);
+            }
+        });
+        builder.setPositiveButton("Add to Favorites", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //DEAR ALEX AND KEITH, PLEASE PUT YOUR PUSH CODE HERE WE LYSM GEORGE AND SERENA
+            }
+        });
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+
+        Dialog alertDialog = builder.create();
+        //alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
+    }
+
+    public void goToMain(Course c){
+        Intent intent=new Intent(this, MainActivity.class);
+        intent.putExtra("Course Sent", c);
+        startActivity(intent);
     }
 
     }
