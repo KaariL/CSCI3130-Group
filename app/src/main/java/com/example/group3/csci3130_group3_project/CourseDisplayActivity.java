@@ -74,7 +74,7 @@ public class CourseDisplayActivity extends BaseActivity {
             @Override
             protected void populateView(View v, Course model, int position) {
                 TextView contactName = (TextView)v.findViewById(android.R.id.text1);
-                contactName.setText(model.description);
+                contactName.setText(model.description+" ("+model.code+")");
             }
         };
         classListView.setAdapter(firebaseAdapter);
@@ -84,9 +84,6 @@ public class CourseDisplayActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Course selection = (Course) firebaseAdapter.getItem(position);
-                selection.name = firebaseAdapter.getRef(position).getKey();
-                Log.d("myTag", selection.name);
-                //firebaseDBInstance.getReference("users").child()
                 popUP(selection);
             }
         });
@@ -97,7 +94,7 @@ public class CourseDisplayActivity extends BaseActivity {
     public void popUP(Course c){
         final Course C = c;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(c.name +"\n"+ c.description);
+        builder.setTitle(c.code +"\n"+ c.description);
         builder.setMessage("Please choose one of these options:");
         builder.setNegativeButton("Navigate", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {

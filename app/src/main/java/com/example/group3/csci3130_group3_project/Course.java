@@ -9,7 +9,8 @@ import java.util.Map;
 
 
 class Course implements Serializable{
-    public String name;
+    public String code;
+    public String address;
     public String building;
     public String campus;
     public String description;
@@ -19,18 +20,20 @@ class Course implements Serializable{
 
     }
 
-    public Course(String b, String c, String d,String r) {
-        //this.name = n;
+    public Course(String co, String a,String b, String c, String d,String r) {
+        this.code = co;
         this.building = b;
         this.campus = c;
         this.description = d;
         this.room = r;
+        this.address = a;
     }
 
     @Exclude
     public Map<String,Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
-        result.put("name",name);
+        result.put("code",code);
+        result.put("address",address);
         result.put("building",building);
         result.put("campus",campus);
         result.put("description",description);
