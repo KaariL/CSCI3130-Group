@@ -150,9 +150,10 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
 
         if(receivedCourse != null){
             EditText locationSearch = (EditText) findViewById(R.id.searchBar);
-            locationSearch.setText("Dalhousie "+receivedCourse.building);
+            locationSearch.setText(receivedCourse.address);
             mMap.setMyLocationEnabled(true);
             performSearch();
+            locationSearch.setText("");
             return;
         }
 
