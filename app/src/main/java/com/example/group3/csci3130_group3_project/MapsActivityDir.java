@@ -2,8 +2,10 @@
 package com.example.group3.csci3130_group3_project;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -14,7 +16,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.View;
 import android.widget.Adapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,19 +38,33 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class MapsActivityDir extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class MapsActivityDir extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener,DirectionFinderListener {
 
     private  static final int REQUEST_LOCATION_CODE=99;
     private GoogleMap mMap;
     private GoogleApiClient cli;
     private LocationRequest locationRequest;
+    MarkerOptions start;
+    MarkerOptions end;
     private Location lastloc;
+    private Button btnFindPath;
     private Marker currLocMarker;
+    double latitude,longitude;
+    private  String cur;
+    private  String de;
+    private List<Marker> originMarkers = new ArrayList<>();
+    private List<Marker> destinationMarkers = new ArrayList<>();
+    private List<Polyline> polylinePaths = new ArrayList<>();
+    private ProgressDialog progressDialog;
 
     private  String dest;//destination
 
@@ -64,10 +83,38 @@ public class MapsActivityDir extends FragmentActivity implements OnMapReadyCallb
         }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
-
+        btnFindPath=(Button)findViewById(R.id.pathBt);
         mapFragment.getMapAsync(this);
 
+        //click the path button
+        btnFindPath.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                mMap.clear();
+                sendRequest();
+            }
+        });
+
+    }
+
+    private void sendRequest() {
+        String origin = cur;
+        String destination = de;
+        if (origin.isEmpty()) {
+            Toast.makeText(this, "Please enter origin address!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (destination.isEmpty()) {
+            Toast.makeText(this, "Please enter destination address!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            new DirectionFinder(this, origin, destination).execute();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -169,8 +216,11 @@ public class MapsActivityDir extends FragmentActivity implements OnMapReadyCallb
         LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
         MarkerOptions markerOptions=new MarkerOptions();
         markerOptions.position(latLng);
+        cur=getAddress(location.getLatitude(),location.getLongitude());
         markerOptions.title("current location");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
+        getAddress(location.getLatitude(),location.getLongitude());
+        start=markerOptions;
         currLocMarker=mMap.addMarker(markerOptions);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomBy(13));
@@ -180,6 +230,32 @@ public class MapsActivityDir extends FragmentActivity implements OnMapReadyCallb
         }
     }
 
+    public String getAddress(double lat, double lng) {
+        Geocoder geocoder = new Geocoder(this);
+        try {
+            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+            Address obj = addresses.get(0);
+            String add = obj.getAddressLine(0);
+            //add = add + "\n" + obj.getCountryName();
+           // add = add + "\n" + obj.getCountryCode();
+           // add = add + "\n" + obj.getAdminArea();
+            add = add + "" + obj.getPostalCode();
+           // add = add + "" + obj.getSubAdminArea();
+            //add = add + " " + obj.getLocality();
+            //add = add + " " + obj.getSubThoroughfare();
+            return add;
+            // Toast.makeText(this, "Address=>" + add,
+            // Toast.LENGTH_SHORT).show();
+
+            // TennisAppActivity.showDialog(add);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+        return "";
+    }
     public boolean checkLoPermission()
     {
         if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED)
@@ -215,10 +291,73 @@ public class MapsActivityDir extends FragmentActivity implements OnMapReadyCallb
         {
             Address address = addressList.get(i);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+            latitude = address.getLatitude();
+            longitude = address.getLongitude();
             markerOptions.position(latLng);
+            de=getAddress(address.getLatitude(),address.getLongitude());
             markerOptions.title("Destination");
+            end=markerOptions;
             mMap.addMarker(markerOptions);
         }
     }
+
+    @Override
+    public void onDirectionFinderStart() {
+        progressDialog = ProgressDialog.show(this, "Please wait.",
+                "Finding direction..!", true);
+
+        if (originMarkers != null) {
+            for (Marker marker : originMarkers) {
+                marker.remove();
+            }
+        }
+
+        if (destinationMarkers != null) {
+            for (Marker marker : destinationMarkers) {
+                marker.remove();
+            }
+        }
+
+        if (polylinePaths != null) {
+            for (Polyline polyline:polylinePaths ) {
+                polyline.remove();
+            }
+        }
     }
+
+    @Override
+    public void onDirectionFinderSuccess(List<Route> routes) {
+        progressDialog.dismiss();
+        polylinePaths = new ArrayList<>();
+        originMarkers = new ArrayList<>();
+        destinationMarkers = new ArrayList<>();
+
+        for (Route route : routes) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
+            ((TextView) findViewById(R.id.tvDuration)).setText(route.duration.text);
+            ((TextView) findViewById(R.id.tvDistance)).setText(route.distance.text);
+
+            originMarkers.add(mMap.addMarker(new MarkerOptions()
+                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue))
+                    .title(route.startAddress)
+                    .position(route.startLocation)));
+            destinationMarkers.add(mMap.addMarker(new MarkerOptions()
+                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green))
+                    .title(route.endAddress)
+                    .position(route.endLocation)));
+
+            PolylineOptions polylineOptions = new PolylineOptions().
+                    geodesic(true).
+                    color(Color.BLUE).
+                    width(10);
+
+            for (int i = 0; i < route.points.size(); i++)
+                polylineOptions.add(route.points.get(i));
+
+            polylinePaths.add(mMap.addPolyline(polylineOptions));
+        }
+    }
+
+
+}
 
