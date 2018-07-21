@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
+public class LoginInstrumentedTest {
     String goodUsername = "kaari.landry@gmail.com";
     String goodPassword = "Agr34Tpw!";
     @Rule
@@ -46,9 +46,10 @@ public class ExampleInstrumentedTest {
     }
 
     @Test
-    public void isOnMapActivity()throws InterruptedException{
+    public void isOnMapActivity()throws InterruptedException {
         Thread.sleep(5000);
         Espresso.onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
+
 
 }
