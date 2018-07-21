@@ -6,13 +6,13 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <!--********Strings used for Register Page **************-->
-    <string name="userRegDefault">Username</string>
-    <string name="userRegErr">Enter a username between 3 and 40 characters.</string>
-    <string name="emailRegDefault">Email</string>
-    <string name="emailRegError">Enter a valid email address.</string>
-    <string name="passwordRegDefault">Password</string>
-    <string name="passwordRegErr">Your password is not strong enough.</string>
-    <string name="confirmPassRegDefault">Confirm password</string>
+    <string name="userRegDefault">  Username</string>
+    <string name="userRegErr">  Enter a username between 3 and 40 characters.</string>
+    <string name="emailRegDefault">  Email</string>
+    <string name="emailRegError">  Enter a valid email address.</string>
+    <string name="passwordRegDefault">  Password</string>
+    <string name="passwordRegErr">  Your password is not strong enough.</string>
+    <string name="confirmPassRegDefault">  Confirm password</string>
     <string name="confirmPassRegErr">Passwords do not match.</string>
     <string name="submitDefault">REGISTER</string>
     <string name="title_activity_credential">Sign in</string>
