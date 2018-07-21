@@ -61,7 +61,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.group3.csci3130_group3_project.MainActivity" />
         </activity>
-        <activity android:name=".DalServicesActivity" >
+        <activity android:name=".DalServicesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.group3.csci3130_group3_project.MainActivity" />
