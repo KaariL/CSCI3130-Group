@@ -30,8 +30,8 @@ public class DalServicesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        addNavBar();
-        setContentView(R.layout.activity_dal_services);
+        addNavBar();
+        //setContentView(R.layout.activity_dal_services)
         final Intent i = getIntent();
         select=i.getStringExtra("select");
         listView=(ListView) findViewById(R.id.listview1);

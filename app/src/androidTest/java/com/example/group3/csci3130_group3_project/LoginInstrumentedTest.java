@@ -47,7 +47,7 @@ public class LoginInstrumentedTest {
 
     @Test
     public void isOnMapActivity()throws InterruptedException {
-        Thread.sleep(5000);
+        Thread.sleep(7000);
         Espresso.onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
 
