@@ -9,6 +9,7 @@ public class UserProfile implements Serializable {
     private String username;
     private String favoriteColor;
 
+
     public UserProfile(){}
     public UserProfile(String uid, String username, String favoriteColor){
         this.uid = uid;
