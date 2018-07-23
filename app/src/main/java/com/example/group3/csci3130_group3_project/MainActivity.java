@@ -67,6 +67,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     public Location mCurrentLocation;
     private LatLngBounds.Builder mBounds = new LatLngBounds.Builder();
 
+    private Course receivedCourse;
+
     //below is used for callbacks in permission checking
     private static final int REQUEST_FINE_LOCATION_ACCESS = 1;
 
@@ -118,6 +120,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
 
         updateLocation();
 
+        receivedCourse = (Course)getIntent().getSerializableExtra("Course Sent");
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -136,6 +139,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
         UiSettings settings = mMap.getUiSettings();
         settings.setZoomControlsEnabled(true);
         //Need to explicitly check for permission before accessing location
@@ -143,9 +147,19 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_FINE_LOCATION_ACCESS);
         }
+
+        if(receivedCourse != null){
+            EditText locationSearch = (EditText) findViewById(R.id.searchBar);
+            locationSearch.setText(receivedCourse.address);
+            mMap.setMyLocationEnabled(true);
+            performSearch();
+            locationSearch.setText("");
+            return;
+        }
+
         mMap.setMyLocationEnabled(true);
 
-        /* Add a marker in Sydney and move the camera
+        /* Add a marker in Dal and move the camera
         This code was for learning purposes only.
         LatLng dal = new LatLng(44.6366, -63.5917);
         mMap.addMarker(new MarkerOptions().position(dal).title("Dalhousie!"));
@@ -161,6 +175,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
             }
         });
         mMap.setOnMapLongClickListener(this);
+
         mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
@@ -177,6 +192,13 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                 if(getIntent().hasExtra("Address")){
                     String location = (String) getIntent().getSerializableExtra("Address");
                     performSearch(location);
+                }
+                if(getIntent().hasExtra("Course Sent")){
+                    Course sentCourse = (Course) getIntent().getSerializableExtra("Course Sent");
+                    if (sentCourse != null){
+                        String address = sentCourse.address;
+                        performSearch(address);
+                    }
                 }
             }
         });
@@ -213,11 +235,11 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                         Address address = addressList.get(0);
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                         mMap.addMarker(new MarkerOptions().position(latLng).title("User Search"));
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
                     } else {
-                        LatLng sydney = new LatLng(-34, 151);
-                        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
+                        LatLng dal = new LatLng(44.636581, -63.591656);
+                        mMap.addMarker(new MarkerOptions().position(dal).title("Marker in Dalhousie"));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dal, 18));
                     }
                 }
             }

@@ -88,7 +88,7 @@ public class ModifyFavoriteDialogue extends DialogFragment {
                         firebaseDBInstance = FirebaseDatabase.getInstance();
                         firebaseReference =  firebaseDBInstance.getReference();
                         favId = selectedFavorite.getId();
-                        firebaseReference.child("users").child(uid).child("favorites").child(favId).removeValue()
+                        firebaseReference.child("users").child(uid).child("favorites").child(selectedFavorite.getName()).removeValue()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {

@@ -17,6 +17,17 @@
             android:id="@+id/nav_profile"
             android:icon="@drawable/common_google_signin_btn_icon_light"
             android:title="@string/nav_profilePrompt"/>
+
+        <item
+            android:id="@+id/nav_courses"
+            android:icon="@drawable/ic_local_cafe"
+            android:title="@string/nav_courses"/>
+
+        <item
+            android:id="@+id/nav_myCourses"
+            android:icon="@drawable/places_ic_search"
+            android:title="@string/nav_myCourses"
+            />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_out"

@@ -8,17 +8,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
-import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -64,8 +58,12 @@ public abstract class BaseActivity extends AppCompatActivity{
                         }
                         if(menuItem.getItemId() == R.id.nav_profile){
                             showProfile();
-
-
+                        }
+                        if(menuItem.getItemId() == R.id.nav_courses){
+                            showCourses();
+                        }
+                        if(menuItem.getItemId() == R.id.nav_myCourses){
+                            showMyCourses();
                         }
                         return true;
                     }
@@ -105,6 +103,12 @@ public abstract class BaseActivity extends AppCompatActivity{
         startActivity(i);
     }
 
+    public void showCourses() {
+        finish();
+        Intent i = new Intent(this,CoursesActivity.class);
+        startActivity(i);
+    }
+
     public void showMain() {
         Intent i = new Intent(this,MainActivity.class);
         startActivity(i);
@@ -114,6 +118,10 @@ public abstract class BaseActivity extends AppCompatActivity{
     }
     public void showProfile(){
         startActivity(new Intent(this, ProfileActivity.class));
+    }
+    public void showMyCourses(){
+        finish();
+        startActivity(new Intent(this, MyCoursesActivity.class));
     }
 
 
