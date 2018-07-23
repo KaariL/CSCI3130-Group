@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/credential_colour"
+    tools:context=".ProfileActivity"
+    tools:layout_editor_absoluteY="25dp">
+
+
+    <ImageView
+        android:id="@+id/imageViewDal"
+        android:layout_width="0dp"
+        android:layout_height="201dp"
+        android:layout_marginBottom="75dp"
+        android:layout_marginEnd="53dp"
+        android:layout_marginStart="53dp"
+        android:layout_marginTop="60dp"
+        app:layout_constraintBottom_toTopOf="@+id/profile_username"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
+
+    <EditText
+        android:id="@+id/profile_favoriteColor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:alpha=".5"
+        android:background="#707372"
+        android:hint="@string/profile_favColorHint"
+        android:paddingLeft="5dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/profile_updateButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_username" />
+
+
+    <Button
+        android:id="@+id/profile_updateButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:alpha="0.80"
+        android:background="#707372"
+        android:onClick="updateProfile"
+        android:text="@string/profile_updateButtonPrompt"
+        app:layout_constraintBottom_toTopOf="@+id/profile_passwordButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_favoriteColor" />
+
+    <Button
+        android:id="@+id/profile_passwordButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="144dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:alpha="0.80"
+        android:background="#707372"
+        android:onClick="changePassword"
+        android:text="@string/profile_updatePasswordPrompt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_updateButton" />
+
+    <EditText
+        android:id="@+id/profile_username"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:alpha=".5"
+        android:background="#707372"
+        android:hint="@string/profile_userNameHint"
+        android:paddingLeft="5dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/profile_favoriteColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewDal" />
+
+</android.support.constraint.ConstraintLayout>

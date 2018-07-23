@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible"
+    tools:context=".Detail">
+
+    <TextView
+        android:id="@+id/textViewdatail"
+        android:layout_width="368dp"
+        android:layout_height="39dp"
+        android:layout_marginEnd="122dp"
+        android:layout_marginLeft="122dp"
+        android:layout_marginRight="122dp"
+        android:layout_marginStart="122dp"
+        android:layout_marginTop="20dp"
+        android:text="buildingname"
+        android:textAlignment="center"
+        android:textSize="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailimageView2" />
+
+    <Button
+        android:id="@+id/detailnumber_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="94dp"
+        android:layout_marginLeft="94dp"
+        android:layout_marginRight="94dp"
+        android:layout_marginStart="94dp"
+        android:layout_marginTop="100px"
+        android:text="CALL"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewdatail" />
+
+    <ImageView
+        android:id="@+id/detailimageView2"
+        android:layout_width="368dp"
+        android:layout_height="160dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/detailwebtextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="94dp"
+        android:layout_marginLeft="94dp"
+        android:layout_marginRight="94dp"
+        android:layout_marginStart="94dp"
+        android:layout_marginTop="5px"
+        android:text="web"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailnumber_text" />
+
+    <Button
+        android:id="@+id/detailLocationtextView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="94dp"
+        android:layout_marginLeft="94dp"
+        android:layout_marginRight="94dp"
+        android:layout_marginStart="94dp"
+        android:layout_marginTop="5px"
+        android:text="location"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailwebtextView"
+        app:layout_constraintVertical_bias="0.00" />
+
+    <!--<ImageView-->
+    <!--android:id="@+id/callimaView"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="56dp"-->
+    <!--android:layout_marginStart="56dp"-->
+    <!--android:layout_marginTop="172dp"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/detailimageView2"-->
+    <!--app:srcCompat="@drawable/ic_phone" />-->
+
+</android.support.constraint.ConstraintLayout>

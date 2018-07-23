@@ -1,0 +1,77 @@
+<resources>
+    <string name="app_name">DalQuest</string>
+    <string name="header"></string>
+    <string name="map">Map</string>
+    <string name="home">Home</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <!--********Strings used for Register Page **************-->
+    <string name="userRegDefault">  Username</string>
+    <string name="userRegErr">  Enter a username between 3 and 40 characters.</string>
+    <string name="emailRegDefault">  Email</string>
+    <string name="emailRegError">  Enter a valid email address.</string>
+    <string name="passwordRegDefault">  Password</string>
+    <string name="passwordRegErr">  Your password is not strong enough.</string>
+    <string name="confirmPassRegDefault">  Confirm password</string>
+    <string name="confirmPassRegErr">Passwords do not match.</string>
+    <string name="submitDefault">REGISTER</string>
+    <string name="title_activity_credential">Sign in</string>
+    <!--*********End Register Strings ********-->
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="forgot_password">I forgot my password</string>
+    <string name="register_prompt">Not a registered user? Sign up today!</string>
+    <string name="register_button">Register</string>
+    <string name="title_activity_email">emailActivity</string>
+    <string name="login_prompt">Sign in with your registered email to start using App!</string>
+    <!--end login strings *****************-->
+
+    <!--***********Strings for navbar**********-->
+    <string name="favorites">Favorites</string>
+    <string name="schedule">My Schedule</string>
+    <string name="services">Dal Services</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="locationSearchPrompt">Enter a location</string>
+    <string name="main_searchButton">Search!</string>
+    <string name="main_LocatioButton">My Location</string>
+    <string name="nav_home">Home</string>
+
+    <!--*********End navbar strings******-->
+
+    <!--**************Strings for Favorites Dialog Box *******-->
+    <string name="fav_addPrompt">Add location to Favorites</string>
+    <string name="fav_addPos">Add to Favorites</string>
+    <string name="fav_addNeg">Cancel</string>
+    <string name="fav_nickname">Enter a nickname</string>
+    <string name="fav_modPrompt">Favorite</string>
+    <string name="fav_modPos">Navigate</string>
+    <string name="fav_modNeg">Remove</string>
+    <string name="fav_modNeut">Cancel</string>
+    <string name="profile_userNameHint">Username</string>
+    <string name="profile_favColorHint">Favorite color (6 digits)</string>
+    <string name="profile_updateButtonPrompt">Update Data</string>
+    <string name="profile_updatePasswordPrompt">Update Password</string>
+    <string name="register_usernamePrompt">Enter a username (optional)</string>
+    <string name="register_favoriteColorPrompt">What\'s your favorite color? (optional)</string>
+    <string name="nav_profilePrompt">Profile</string>
+    <string name="changePass_oldPassPrompt">Enter old password</string>
+    <string name="changePass_newPassPrompt">Enter new password</string>
+    <string name="changePass_confirmPassPrompt">Confirm new password</string>
+    <string name="changePass_message">Change your password</string>
+    <string name="changePass_pos">Update Password</string>
+    <string name="title_activity_credential_new_ui">Sign in</string>
+    <!--******************************************************-->
+
+
+</resources>
