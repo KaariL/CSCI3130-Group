@@ -66,9 +66,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     private LocationManager mLocationManager;
     public Location mCurrentLocation;
     private LatLngBounds.Builder mBounds = new LatLngBounds.Builder();
-
+    public Button dirBt;
     private Course receivedCourse;
-
     //below is used for callbacks in permission checking
     private static final int REQUEST_FINE_LOCATION_ACCESS = 1;
 
@@ -79,6 +78,26 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         super.onCreate(savedInstanceState);
         addNavBar();
         setActivityLayout(R.layout.activity_main);
+        //**************************BT**************************************
+        dirBt=(Button)findViewById(R.id.dir_button);
+
+
+        dirBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (((EditText)findViewById(R.id.searchBar)).getText().toString().trim().length()>2)
+                {
+                    String val=((EditText)findViewById(R.id.searchBar)).getText().toString().trim();
+                    Intent i=new Intent( MainActivity.this,MapsActivityDir.class);
+                    i.putExtra("loc",val);
+                    startActivity(i);
+                }else
+                {
+
+                }
+            }
+        });
+        //**************************BT**************************************
 
         //CHECK LOGIN
         firebaseAuth = FirebaseAuth.getInstance();
@@ -202,7 +221,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                 }
             }
         });
-
 
 
     }
