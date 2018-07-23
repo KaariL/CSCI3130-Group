@@ -193,6 +193,13 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                     String location = (String) getIntent().getSerializableExtra("Address");
                     performSearch(location);
                 }
+                if(getIntent().hasExtra("Course Sent")){
+                    Course sentCourse = (Course) getIntent().getSerializableExtra("Course Sent");
+                    if (sentCourse != null){
+                        String address = sentCourse.address;
+                        performSearch(address);
+                    }
+                }
             }
         });
 

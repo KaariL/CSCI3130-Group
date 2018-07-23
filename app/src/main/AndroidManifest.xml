@@ -74,7 +74,8 @@
                 android:value="com.example.group3.csci3130_group3_project.MainActivity" />
         </activity>
         <activity android:name=".CoursesActivity" />
-        <activity android:name=".CourseDisplayActivity"></activity>
+        <activity android:name=".CourseDisplayActivity" />
+        <activity android:name=".MyCoursesActivity"></activity>
     </application>
 
 </manifest>

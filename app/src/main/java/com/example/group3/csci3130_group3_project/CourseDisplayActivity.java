@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -22,6 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class CourseDisplayActivity extends BaseActivity {
 
@@ -50,7 +55,7 @@ public class CourseDisplayActivity extends BaseActivity {
             finish();
             startActivity(new Intent(this, CredentialActivity.class));
         }
-        FirebaseUser user = firebaseAuth.getCurrentUser();
+        final FirebaseUser user = firebaseAuth.getCurrentUser();
 
 
 
@@ -84,26 +89,46 @@ public class CourseDisplayActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Course selection = (Course) firebaseAdapter.getItem(position);
-                popUP(selection);
+                popUP(selection, user);
             }
         });
 
 
     }
 
-    public void popUP(Course c){
-        final Course C = c;
+    public void popUP(Course c, FirebaseUser user){
+        final Course selectedCourse = c;
+        final String uid = user.getUid();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(c.code +"\n"+ c.description);
         builder.setMessage("Please choose one of these options:");
         builder.setNegativeButton("Navigate", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
-                goToMain(C);
+                goToMain(selectedCourse);
             }
         });
-        builder.setPositiveButton("Add to Favorites", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.coursedisplay_addPrompt, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
-                //DEAR ALEX AND KEITH, PLEASE PUT YOUR PUSH CODE HERE WE LYSM GEORGE AND SERENA
+                DatabaseReference rootReference = firebaseDBInstance.getReference();
+
+                String courseId = rootReference.child("users").child(uid).child("courses").child("course").push().getKey();
+                rootReference.child("users").child(uid).child("courses").child(selectedCourse.code).setValue(selectedCourse)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // Write was successful!
+                                Log.d("Add new course:", "Write Successful");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Write failed
+                                // ...
+                                String error = e.getMessage() + ": " + e.getCause();
+                                Log.d("Add new course:", "Write Failed: " + error);
+                            }
+                        });
             }
         });
         builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {

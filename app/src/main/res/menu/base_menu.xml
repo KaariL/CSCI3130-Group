@@ -21,8 +21,13 @@
         <item
             android:id="@+id/nav_courses"
             android:icon="@drawable/ic_local_cafe"
-            android:title="Courses"/>
+            android:title="@string/nav_courses"/>
 
+        <item
+            android:id="@+id/nav_myCourses"
+            android:icon="@drawable/places_ic_search"
+            android:title="@string/nav_myCourses"
+            />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_out"

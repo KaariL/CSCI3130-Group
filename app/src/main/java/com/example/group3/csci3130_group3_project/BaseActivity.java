@@ -62,6 +62,9 @@ public abstract class BaseActivity extends AppCompatActivity{
                         if(menuItem.getItemId() == R.id.nav_courses){
                             showCourses();
                         }
+                        if(menuItem.getItemId() == R.id.nav_myCourses){
+                            showMyCourses();
+                        }
                         return true;
                     }
                 });
@@ -119,6 +122,10 @@ public abstract class BaseActivity extends AppCompatActivity{
     public void showProfile(){
         finish();
         startActivity(new Intent(this, ProfileActivity.class));
+    }
+    public void showMyCourses(){
+        finish();
+        startActivity(new Intent(this, MyCoursesActivity.class));
     }
 
 

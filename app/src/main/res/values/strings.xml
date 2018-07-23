@@ -68,6 +68,9 @@
     <string name="changePass_confirmPassPrompt">Confirm new password</string>
     <string name="changePass_message">Change your password</string>
     <string name="changePass_pos">Update Password</string>
+    <string name="nav_myCourses">My Courses</string>
+    <string name="nav_courses">Courses</string>
+    <string name="coursedisplay_addPrompt">Add to My Courses</string>
     <!--******************************************************-->
 
 

@@ -64,7 +64,7 @@ public class AddFavoriteDialog extends DialogFragment {
                                 Favorite newFavorite = new Favorite(favoriteId, nickname, newLocation);
 
                                 //Success listeners
-                                firebaseReference.child("users").child(uid).child("favorites").child(favoriteId).setValue(newFavorite)
+                                firebaseReference.child("users").child(uid).child("favorites").child(newFavorite.getName()).setValue(newFavorite)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
