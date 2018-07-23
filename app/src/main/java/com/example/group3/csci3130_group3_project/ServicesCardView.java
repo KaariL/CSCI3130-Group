@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class ServicesCardView extends AppCompatActivity {
+public class ServicesCardView extends BaseActivity {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -14,7 +14,9 @@ public class ServicesCardView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_services_card_view);
+        //setContentView(R.layout.activity_services_card_view);
+        addNavBar();
+        setActivityLayout(R.layout.activity_services_card_view);
         ArrayList<ExItem> exItems=new ArrayList<>();
         exItems.add(new ExItem(R.drawable.ic_home,"Facilities"));
         exItems.add(new ExItem(R.drawable.ic_local_cafe,"Food and Beverage"));

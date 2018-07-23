@@ -20,7 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 
-public class DalServicesActivity extends AppCompatActivity {
+public class DalServicesActivity extends BaseActivity {
 
     private ListView listView;
     private ArrayAdapter<String> adapters;
@@ -30,7 +30,8 @@ public class DalServicesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dal_services);
+        addNavBar();
+        //setContentView(R.layout.activity_dal_services)
         final Intent i = getIntent();
         select=i.getStringExtra("select");
         listView=(ListView) findViewById(R.id.listview1);

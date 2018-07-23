@@ -1,22 +1,23 @@
 <resources>
-    <string name="app_name">CSCI3130_Group3_Project</string>
-    <string name="header">MapQuest</string>
+    <string name="app_name">DalQuest</string>
+    <string name="header"></string>
     <string name="map">Map</string>
     <string name="home">Home</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <!--********Strings used for Register Page **************-->
-    <string name="userRegDefault">Username</string>
-    <string name="userRegErr">Enter a username between 3 and 40 characters.</string>
-    <string name="emailRegDefault">Email</string>
-    <string name="emailRegError">Enter a valid email address.</string>
-    <string name="passwordRegDefault">Password</string>
-    <string name="passwordRegErr">Your password is not strong enough.</string>
-    <string name="confirmPassRegDefault">Confirm password</string>
+    <string name="userRegDefault">  Username</string>
+    <string name="userRegErr">  Enter a username between 3 and 40 characters.</string>
+    <string name="emailRegDefault">  Email</string>
+    <string name="emailRegError">  Enter a valid email address.</string>
+    <string name="passwordRegDefault">  Password</string>
+    <string name="passwordRegErr">  Your password is not strong enough.</string>
+    <string name="confirmPassRegDefault">  Confirm password</string>
     <string name="confirmPassRegErr">Passwords do not match.</string>
     <string name="submitDefault">REGISTER</string>
     <string name="title_activity_credential">Sign in</string>
     <!--*********End Register Strings ********-->
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -35,12 +36,13 @@
     <string name="title_activity_email">emailActivity</string>
     <string name="login_prompt">Sign in with your registered email to start using App!</string>
     <!--end login strings *****************-->
+
     <!--***********Strings for navbar**********-->
     <string name="favorites">Favorites</string>
     <string name="schedule">My Schedule</string>
     <string name="services">Dal Services</string>
     <string name="title_activity_maps">Map</string>
-    <string name="locationSearchPrompt">Enter an location</string>
+    <string name="locationSearchPrompt">Enter a location</string>
     <string name="main_searchButton">Search!</string>
     <string name="main_LocatioButton">My Location</string>
     <string name="nav_home">Home</string>
@@ -68,9 +70,11 @@
     <string name="changePass_confirmPassPrompt">Confirm new password</string>
     <string name="changePass_message">Change your password</string>
     <string name="changePass_pos">Update Password</string>
+    <string name="title_activity_credential_new_ui">Sign in</string>
     <string name="nav_myCourses">My Courses</string>
     <string name="nav_courses">Courses</string>
     <string name="coursedisplay_addPrompt">Add to My Courses</string>
+
     <!--******************************************************-->
 
 

@@ -11,13 +11,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
+import com.squareup.picasso.Picasso;
 
 
 public class CredentialActivity extends AppCompatActivity implements View.OnClickListener {
@@ -31,11 +32,13 @@ public class CredentialActivity extends AppCompatActivity implements View.OnClic
     private InputMethodManager imm;
     private FirebaseAuth firebaseAuth;
     public static CredentialActivity credentialPage;
+    private ImageView imageDal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         credentialPage = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credential);
+        imageDal = (ImageView)findViewById(R.id.imageViewDal);
 
         firebaseAuth=FirebaseAuth.getInstance();
      /*   if(firebaseAuth.getCurrentUser()!=null)
@@ -56,6 +59,8 @@ public class CredentialActivity extends AppCompatActivity implements View.OnClic
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         Intent i = getIntent();
         userN_editText.setText(i.getStringExtra("email"));
+
+        Picasso.get().load("https://cdn.dal.ca/content/dam/dalhousie/images/dept/communicationsandmarketing/01%20DAL%20FullMark-Blk.png.lt_9dc61ccd695321bd3d499967167ff304.res/01%20DAL%20FullMark-Blk.png").into(imageDal);
 
     }
 
