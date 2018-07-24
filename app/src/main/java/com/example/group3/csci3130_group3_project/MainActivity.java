@@ -79,7 +79,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         addNavBar();
         setActivityLayout(R.layout.activity_main);
         //**************************BT**************************************
-        dirBt=(Button)findViewById(R.id.dir_button);
+       /* dirBt=(Button)findViewById(R.id.dir_button);
 
 
         dirBt.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +98,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
             }
         });
         //**************************BT**************************************
-
+        */
         //CHECK LOGIN
         firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() == null) {
