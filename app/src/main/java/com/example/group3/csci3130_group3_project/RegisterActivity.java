@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -29,6 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
     public DatabaseReference firebaseReference;
     public FirebaseDatabase firebaseDBInstance;
     private static final String TAG = "Register";
+    private ImageView imageDal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +39,9 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         validator = new registrationValidator();
         formIsValid = true;
+
+        imageDal = (ImageView)findViewById(R.id.imageViewDal);
+        Picasso.get().load("https://cdn.dal.ca/content/dam/dalhousie/images/dept/communicationsandmarketing/01%20DAL%20FullMark-Blk.png.lt_9dc61ccd695321bd3d499967167ff304.res/01%20DAL%20FullMark-Blk.png").into(imageDal);
     }
 
     protected void createNewUser(String email, String password){
