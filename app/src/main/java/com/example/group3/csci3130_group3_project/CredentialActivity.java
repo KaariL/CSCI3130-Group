@@ -58,7 +58,7 @@ public class CredentialActivity extends AppCompatActivity implements View.OnClic
         regs_bt.setOnClickListener(this);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         Intent i = getIntent();
-        userN_editText.setText(i.getStringExtra("email"));
+        userN_editText.setText(i.getStringExtra(getString(R.string.prompt_email)));
 
         Picasso.get().load("https://cdn.dal.ca/content/dam/dalhousie/images/dept/communicationsandmarketing/01%20DAL%20FullMark-Blk.png.lt_9dc61ccd695321bd3d499967167ff304.res/01%20DAL%20FullMark-Blk.png").into(imageDal);
 
@@ -72,16 +72,16 @@ public class CredentialActivity extends AppCompatActivity implements View.OnClic
         //check input states
         if(TextUtils.isEmpty(userN))
         {
-            Toast.makeText(this,"Enter email",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,R.string.emailRegError,Toast.LENGTH_LONG).show();
             return;
         }
         if(TextUtils.isEmpty(psw))
         {
-            Toast.makeText(this,"Enter password",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,R.string.error_incorrect_password,Toast.LENGTH_LONG).show();
             return;
         }
 
-        progressDialog.setMessage("Login .....");
+        progressDialog.setMessage(getString(R.string.login_successful));
         progressDialog.show();
 
         firebaseAuth.signInWithEmailAndPassword(userN,psw).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -98,7 +98,7 @@ public class CredentialActivity extends AppCompatActivity implements View.OnClic
                 else
                 {
                     psw_editText.setText(null);
-                    Toast.makeText(getApplicationContext(),"Enter corrected password",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),R.string.error_incorrect_password,Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -113,7 +113,7 @@ public class CredentialActivity extends AppCompatActivity implements View.OnClic
     public void openRegistrationForm(View view){
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
-    }
+        }
     @Override
     public void onClick(View v) {
         imm.hideSoftInputFromWindow(psw_editText.getWindowToken(), 0);
