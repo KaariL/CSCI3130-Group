@@ -35,6 +35,7 @@
     <string name="register_button">Register</string>
     <string name="title_activity_email">emailActivity</string>
     <string name="login_prompt">Sign in with your registered email to start using App!</string>
+    <string name="login_successful">Login Successful</string>
     <!--end login strings *****************-->
 
     <!--***********Strings for navbar**********-->
@@ -70,14 +71,7 @@
     <string name="changePass_confirmPassPrompt">Confirm new password</string>
     <string name="changePass_message">Change your password</string>
     <string name="changePass_pos">Update Password</string>
-
-    <string name="title_activity_maps_dir">Map</string>
     <string name="title_activity_credential_new_ui">Sign in</string>
-
-    <string name="nav_myCourses">My Courses</string>
-    <string name="nav_courses">Courses</string>
-    <string name="coursedisplay_addPrompt">Add to My Courses</string>
-
     <!--******************************************************-->
 
 
