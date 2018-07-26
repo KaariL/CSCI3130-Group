@@ -304,7 +304,7 @@ public class MapsActivityDir extends FragmentActivity implements OnMapReadyCallb
     @Override
     public void onDirectionFinderStart() {
         progressDialog = ProgressDialog.show(this, "Please wait.",
-                "Finding direction..!", true);
+                "Navigating...", true);
 
         if (originMarkers != null) {
             for (Marker marker : originMarkers) {
@@ -347,7 +347,7 @@ public class MapsActivityDir extends FragmentActivity implements OnMapReadyCallb
                     .position(route.endLocation)));
 
             PolylineOptions polylineOptions = new PolylineOptions().
-                    geodesic(true).
+                    geodesic(false).
                     color(Color.BLUE).
                     width(10);
 

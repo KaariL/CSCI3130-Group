@@ -157,7 +157,7 @@ public class MyCoursesActivity extends BaseActivity implements View.OnClickListe
         builder.setPositiveButton("Navigate", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent intent=new Intent(MyCoursesActivity.this, MainActivity.class);
-                intent.putExtra("Course Sent", selectedCourse);
+                intent.putExtra("my course", selectedCourse);
                 startActivity(intent);
             }
         });
