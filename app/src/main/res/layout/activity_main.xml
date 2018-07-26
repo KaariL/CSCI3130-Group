@@ -10,34 +10,40 @@
     tools:layout_editor_absoluteY="25dp">
 
 
-    <!-- <TextView
-        android:id="@+id/userEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="145dp"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" /> -->
-
-
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="368dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        map:layout_constraintBottom_toTopOf="@+id/searchButton"
+        map:layout_constraintBottom_toTopOf="@+id/routeTime"
         map:layout_constraintEnd_toEndOf="parent"
         map:layout_constraintStart_toStartOf="parent"
         map:layout_constraintTop_toBottomOf="@+id/searchBar"
         tools:context=".MapsActivity" />
 
+    <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchBar"
+        android:layout_marginTop="50dp"
+        android:background="@color/cardview_light_background"
+        android:ems="10"
+        android:hint="Enter a location"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <!--
     <EditText
         android:id="@+id/searchBar"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="50dp"
         android:background="@color/cardview_light_background"
         android:ems="10"
@@ -60,12 +66,13 @@
         android:text="@string/main_searchButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/map" />
+        app:layout_constraintTop_toBottomOf="@+id/map" /> -->
 
     <TextView
         android:id="@+id/routeTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="29dp"
         android:layout_marginBottom="29dp"
         android:layout_marginStart="16dp"
         android:text=""
@@ -76,6 +83,7 @@
         android:id="@+id/routeDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="29dp"
         android:layout_marginBottom="29dp"
         android:layout_marginStart="74dp"
         android:text=""

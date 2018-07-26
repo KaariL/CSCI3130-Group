@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,8 +73,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     private LocationManager mLocationManager;
     public Location mCurrentLocation;
     private LatLngBounds.Builder mBounds = new LatLngBounds.Builder();
-    public Button dirBt;
-    private Course receivedCourse;
+   // public Button dirBt;
+    public SearchView searchBar;
     //below is used for callbacks in permission checking
     private static final int REQUEST_FINE_LOCATION_ACCESS = 1;
     //
@@ -90,6 +91,20 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         super.onCreate(savedInstanceState);
         addNavBar();
         setActivityLayout(R.layout.activity_main);
+        searchBar = (SearchView) findViewById(R.id.searchBar);
+        searchBar.setSubmitButtonEnabled(true);
+        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                performSearch(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         //**************************BT**************************************
        /* dirBt=(Button)findViewById(R.id.dir_button);
 
@@ -151,12 +166,12 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
 
         updateLocation();
 
-        receivedCourse = (Course)getIntent().getSerializableExtra("Course Sent");
-
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
 
     }
 
@@ -179,14 +194,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                     REQUEST_FINE_LOCATION_ACCESS);
         }
 
-        if(receivedCourse != null){
-            EditText locationSearch = (EditText) findViewById(R.id.searchBar);
-            locationSearch.setText(receivedCourse.address);
-            mMap.setMyLocationEnabled(true);
-            performSearch();
-            locationSearch.setText("");
-            return;
-        }
 
         mMap.setMyLocationEnabled(true);
 
@@ -213,14 +220,12 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                 if(getIntent().hasExtra("Favorite")) {
                     Favorite sentFavorite = (Favorite) getIntent().getSerializableExtra("Favorite");
                     if (sentFavorite != null) {
-                        String message = String.format("%f, %f; %s", sentFavorite.getmLatitude(), sentFavorite.getmLongitude(), sentFavorite.getName());
                         LatLng sentLocation = new LatLng(sentFavorite.getmLatitude(), sentFavorite.getmLongitude());
-                        Log.d("Favorite coordinates:", message);
-                        mMap.addMarker(new MarkerOptions().position(sentLocation));
-                        addPointToViewPort(sentLocation);
+                        performSearch(sentLocation);
 
                     }
                 }
+                //Check for serializable extras for navigation
                 if(getIntent().hasExtra("Address")){
                     String location = (String) getIntent().getSerializableExtra("Address");
                     performSearch(location);
@@ -251,37 +256,33 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                 findViewById(R.id.searchBar).getHeight()));
     }
 
-    public void mapSearch(View view) {
-        performSearch();
-    }
-    public void performSearch(){
-        EditText locationSearch = (EditText) findViewById(R.id.searchBar);
-        String location = locationSearch.getText().toString();
+
+    public void performSearch(LatLng location){
         List<Address> addressList = null;
-
+        List<Address> currentLocation = null;
         if (location != null) {
-            if(!location.isEmpty()) {
-
                 Geocoder geocoder = new Geocoder(this);
                 try {
-                    addressList = geocoder.getFromLocationName(location, 1);
+                    addressList = geocoder.getFromLocation(location.latitude, location.longitude, 1);
+                    currentLocation = geocoder.getFromLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), 1);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if(addressList != null) {
+
+                if(addressList != null && currentLocation != null) {
                     if (!addressList.isEmpty()) {
                         Address address = addressList.get(0);
+                        Address originAddress = currentLocation.get(0);
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                        mMap.addMarker(new MarkerOptions().position(latLng).title("User Search"));
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
+                        String destination = address.getAddressLine(0) + "" + address.getPostalCode();
+                        String origin = originAddress.getAddressLine(0) + "" + originAddress.getPostalCode();
+                        sendRequest(origin, destination);
                     } else {
-                        LatLng dal = new LatLng(44.636581, -63.591656);
-                        mMap.addMarker(new MarkerOptions().position(dal).title("Marker in Dalhousie"));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dal, 18));
+                        Toast.makeText(this, "We couldn't find your place. Please try again.", Toast.LENGTH_LONG);
                     }
                 }
-            }
         }
+
     }
     public void performSearch(String input){
         List<Address> addressList = null;
@@ -304,16 +305,12 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                         Address address = addressList.get(0);
                         Address originAddress = currentLocation.get(0);
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                      //  mMap.addMarker(new MarkerOptions().position(latLng).title("User Search"));
-                       // mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
                         String destination = address.getAddressLine(0) + "" + address.getPostalCode();
                         String origin = originAddress.getAddressLine(0) + "" + originAddress.getPostalCode();
                         Log.d("PErform search:", origin + " " + destination);
                         sendRequest(origin, destination);
                     } else {
-                        LatLng sydney = new LatLng(-34, 151);
-                        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
+                        Toast.makeText(this, "We couldn't find your place. Please try again.", Toast.LENGTH_LONG);
                     }
                 }
             }

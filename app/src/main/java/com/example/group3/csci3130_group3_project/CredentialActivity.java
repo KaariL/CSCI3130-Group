@@ -41,12 +41,7 @@ public class CredentialActivity extends AppCompatActivity implements View.OnClic
         imageDal = (ImageView)findViewById(R.id.imageViewDal);
 
         firebaseAuth=FirebaseAuth.getInstance();
-     /*   if(firebaseAuth.getCurrentUser()!=null)
-        {
-            //login state
-            finish();
-            startActivity(new Intent(getApplicationContext(),MainActivity.class));
-        } */
+
 
         psw_editText=(EditText) findViewById(R.id.editText_psw);
         userN_editText=(EditText) findViewById(R.id.editText_name);
@@ -91,9 +86,10 @@ public class CredentialActivity extends AppCompatActivity implements View.OnClic
                 if(task.isSuccessful())
                 {
                     finish();
-
-
-                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                    Intent login = new Intent(getApplicationContext(), MainActivity.class);
+                    //prevents back navigation to login page
+                    login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(login);
                 }
                 else
                 {
