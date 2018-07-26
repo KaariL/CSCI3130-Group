@@ -3,9 +3,11 @@ package com.example.group3.csci3130_group3_project;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -43,18 +45,22 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends BaseActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+public class MainActivity extends BaseActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, DirectionFinderListener {
     FirebaseAuth firebaseAuth;
     public DatabaseReference firebaseReference;
     public FirebaseDatabase firebaseDBInstance;
@@ -70,7 +76,13 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     private Course receivedCourse;
     //below is used for callbacks in permission checking
     private static final int REQUEST_FINE_LOCATION_ACCESS = 1;
+    //
 
+    private List<Marker> originMarkers = new ArrayList<>();
+    private List<Marker> destinationMarkers = new ArrayList<>();
+    private List<Polyline> polylinePaths = new ArrayList<>();
+    private ProgressDialog progressDialog;
+    //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +125,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
 
         //Connect to Google API client
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.GEO_DATA_API).addApi(LocationServices.API)
                 .build();
         mGoogleApiClient.connect();
 
@@ -206,6 +218,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                         Log.d("Favorite coordinates:", message);
                         mMap.addMarker(new MarkerOptions().position(sentLocation));
                         addPointToViewPort(sentLocation);
+
                     }
                 }
                 if(getIntent().hasExtra("Address")){
@@ -215,6 +228,13 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                 if(getIntent().hasExtra("Course Sent")){
                     Course sentCourse = (Course) getIntent().getSerializableExtra("Course Sent");
                     if (sentCourse != null){
+                        String address = sentCourse.address;
+                        performSearch(address);
+                    }
+                }
+                if(getIntent().hasExtra("my course")){
+                    Course sentCourse = (Course) getIntent().getSerializableExtra("my course");
+                    if(sentCourse != null){
                         String address = sentCourse.address;
                         performSearch(address);
                     }
@@ -265,22 +285,31 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     }
     public void performSearch(String input){
         List<Address> addressList = null;
+        List<Address> currentLocation = null;
         String location = input;
+        Log.d("Perform Search:", "Prior to location confirm");
         if (location != null) {
             if(!location.isEmpty()) {
 
                 Geocoder geocoder = new Geocoder(this);
                 try {
                     addressList = geocoder.getFromLocationName(location, 1);
+                    currentLocation = geocoder.getFromLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), 1);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if(addressList != null) {
+                Log.d("Perform Search:", "Prior to address confirm");
+                if(addressList != null && currentLocation != null) {
                     if (!addressList.isEmpty()) {
                         Address address = addressList.get(0);
+                        Address originAddress = currentLocation.get(0);
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                        mMap.addMarker(new MarkerOptions().position(latLng).title("User Search"));
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                      //  mMap.addMarker(new MarkerOptions().position(latLng).title("User Search"));
+                       // mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                        String destination = address.getAddressLine(0) + "" + address.getPostalCode();
+                        String origin = originAddress.getAddressLine(0) + "" + originAddress.getPostalCode();
+                        Log.d("PErform search:", origin + " " + destination);
+                        sendRequest(origin, destination);
                     } else {
                         LatLng sydney = new LatLng(-34, 151);
                         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
@@ -288,6 +317,68 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                     }
                 }
             }
+        }
+    }
+    @Override
+    public void onDirectionFinderStart() {
+        progressDialog = ProgressDialog.show(this, "Please wait.",
+                "Navigating...", true);
+
+        if (originMarkers != null) {
+            for (Marker marker : originMarkers) {
+                marker.remove();
+            }
+        }
+
+        if (destinationMarkers != null) {
+            for (Marker marker : destinationMarkers) {
+                marker.remove();
+            }
+        }
+
+        if (polylinePaths != null) {
+            for (Polyline polyline:polylinePaths ) {
+                polyline.remove();
+            }
+        }
+    }
+
+    @Override
+    public void onDirectionFinderSuccess(List<Route> routes) {
+        progressDialog.dismiss();
+        polylinePaths = new ArrayList<>();
+        originMarkers = new ArrayList<>();
+        destinationMarkers = new ArrayList<>();
+        LatLngBounds.Builder routeBuilder = new LatLngBounds.Builder();
+
+        for (Route route : routes) {
+            Log.d(String.format("Route %s to ", route.startAddress), route.endAddress );
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
+            ((TextView) findViewById(R.id.routeTime)).setText(route.duration.text);
+            ((TextView) findViewById(R.id.routeDistance)).setText(route.distance.text);
+
+            originMarkers.add(mMap.addMarker(new MarkerOptions()
+                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue))
+                    .title(route.startAddress)
+                    .position(route.startLocation)));
+            destinationMarkers.add(mMap.addMarker(new MarkerOptions()
+                    //.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green))
+                    .title(route.endAddress)
+                    .position(route.endLocation)));
+
+            PolylineOptions polylineOptions = new PolylineOptions().
+                    geodesic(false).
+                    color(Color.BLUE).
+                    width(10);
+
+            for (int i = 0; i < route.points.size(); i++) {
+                polylineOptions.add(route.points.get(i));
+                Log.d(String.format("Route finder point %d", i), String.format("%f, %f", route.points.get(i).latitude, route.points.get(i).longitude));
+                routeBuilder.include(route.points.get(i));
+            }
+            LatLngBounds routeBounds = routeBuilder.build();
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(routeBounds, 10));
+            polylinePaths.add(mMap.addPolyline(polylineOptions));
         }
     }
 
@@ -358,10 +449,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         }
     }
 
-    /*
-    * If the user has not granted the app the required permissions this code handles the request and response
-    * TODO: Perform some sort of error handling in case they say no and improve current error handling
-    * */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -376,8 +463,13 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         }
     }
 
-  /*  public void Display(String e) {
-        TextView st = (TextView) findViewById(R.id.statusText);
-        st.setText(e);
-    } */
+    private void sendRequest(String origin, String destination) {
+        Log.d("Location request:", "sendRequest entered");
+        try {
+            new DirectionFinder(this, origin, destination).execute();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
