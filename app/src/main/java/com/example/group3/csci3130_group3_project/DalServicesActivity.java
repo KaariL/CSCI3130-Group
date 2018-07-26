@@ -30,11 +30,12 @@ public class DalServicesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         addNavBar();
-        //setContentView(R.layout.activity_dal_services)
+        setContentView(R.layout.activity_dal_services);
         final Intent i = getIntent();
         select=i.getStringExtra("select");
-        listView=(ListView) findViewById(R.id.listview1);
+        listView= findViewById(R.id.listview1);
         //******************************************************
         list=new ArrayList<String>();
         namelist=new ArrayList<String>();
@@ -43,7 +44,7 @@ public class DalServicesActivity extends BaseActivity {
         numberlist=new ArrayList<String>();
         imaList=new ArrayList<String>();
         //******************************************************
-        adapters=new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,list);
+        adapters=new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item,list);
         listView.setAdapter(adapters);
         databaseReference= FirebaseDatabase.getInstance().getReference().child("facilities").child(select);
 
