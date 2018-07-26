@@ -13,7 +13,7 @@
         android:id="@+id/imageViewDal"
         android:layout_width="305dp"
         android:layout_height="177dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,9 +22,11 @@
 
     <EditText
         android:id="@+id/register_username"
-        android:layout_width="395dp"
+        android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
         android:alpha=".5"
         android:background="#707372"
         android:ems="10"
@@ -40,8 +42,10 @@
 
     <EditText
         android:id="@+id/email"
-        android:layout_width="395dp"
+        android:layout_width="0dp"
         android:layout_height="60dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:alpha=".5"
         android:background="#707372"
@@ -58,8 +62,10 @@
 
     <EditText
         android:id="@+id/register_favoriteColor"
-        android:layout_width="395dp"
+        android:layout_width="0dp"
         android:layout_height="60dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:alpha=".5"
         android:background="#707372"
@@ -76,8 +82,10 @@
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="395dp"
+        android:layout_width="0dp"
         android:layout_height="60dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:alpha=".5"
         android:background="#707372"
@@ -94,8 +102,10 @@
 
     <EditText
         android:id="@+id/confirmPassword"
-        android:layout_width="395dp"
+        android:layout_width="0dp"
         android:layout_height="60dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:alpha=".5"
         android:background="#707372"
@@ -112,9 +122,12 @@
 
     <Button
         android:id="@+id/button3"
-        android:layout_width="395dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
         android:layout_marginVertical="60dp"
         android:alpha="0.80"
         android:background="#707372"
@@ -122,6 +135,7 @@
         android:text="@string/submitDefault"
         android:textColor="#FFFFFF"
         android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
