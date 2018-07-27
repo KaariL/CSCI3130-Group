@@ -16,6 +16,8 @@
     <string name="confirmPassRegErr">Passwords do not match.</string>
     <string name="submitDefault">REGISTER</string>
     <string name="title_activity_credential">Sign in</string>
+    <string name="email_in_use">This email is already in use. Please try again</string>
+    <string name="auth_failure">Authenitifcation failed</string>
     <!--*********End Register Strings ********-->
 
     <!-- Strings related to login -->
