@@ -155,8 +155,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
             mLocationManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER,true);
             // Build the alert dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Location Services Not Active");
-            builder.setMessage("Please enable Location Services and GPS");
+            builder.setTitle(R.string.mapsactivity_loaction_services_notactive);
+            builder.setMessage(R.string.mapsactivity_gps_location_not_active);
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     // Show location settings when the user acknowledges the alert dialog
@@ -356,7 +356,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                         String origin = originAddress.getAddressLine(0) + "" + originAddress.getPostalCode();
                         sendRequest(origin, destination);
                     } else {
-                        Toast.makeText(this, "We couldn't find your place. Please try again.", Toast.LENGTH_LONG);
+                        Toast.makeText(this, R.string.mapsactivity_place_not_found, Toast.LENGTH_LONG);
                     }
                 }
         }
@@ -385,10 +385,10 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                         String destination = address.getAddressLine(0) + "" + address.getPostalCode();
                         String origin = originAddress.getAddressLine(0) + "" + originAddress.getPostalCode();
-                        Log.d("PErform search:", origin + " " + destination);
+                        Log.d("Perform search:", origin + " " + destination);
                         sendRequest(origin, destination);
                     } else {
-                        Toast.makeText(this, "We couldn't find your place. Please try again.", Toast.LENGTH_LONG);
+                        Toast.makeText(this, R.string.mapsactivity_place_not_found, Toast.LENGTH_LONG);
                     }
                 }
             }
@@ -396,8 +396,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     }
     @Override
     public void onDirectionFinderStart() {
-        progressDialog = ProgressDialog.show(this, "Please wait.",
-                "Navigating...", true);
+        progressDialog = ProgressDialog.show(this, String.valueOf(R.string.mapsactivity_wait),
+                String.valueOf(R.string.mapsactivity_nav), true);
 
         if (originMarkers != null) {
             for (Marker marker : originMarkers) {

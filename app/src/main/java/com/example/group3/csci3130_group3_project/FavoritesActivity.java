@@ -51,10 +51,10 @@ public class FavoritesActivity extends BaseActivity implements View.OnClickListe
                         ModifyFavoriteDialogue modifyFavoriteDialogue = new ModifyFavoriteDialogue();
                         modifyFavoriteDialogue.setSelectedFavorite(selectedFavorite);
                         Log.d("favorite pass", String.format("latitude %f longitude %f",selectedFavorite.getmLatitude(),selectedFavorite.getmLongitude()));
-                        modifyFavoriteDialogue.show(getSupportFragmentManager(), "Favorite");
+                        modifyFavoriteDialogue.show(getSupportFragmentManager(), String.valueOf(R.string.fav_modPrompt));
                     }
                     else{
-                        Toast.makeText(FavoritesActivity.this, "That didn't work.", Toast.LENGTH_LONG);
+                        Toast.makeText(FavoritesActivity.this, String.valueOf(R.string.fav_modFail), Toast.LENGTH_LONG);
                     }
                 }
             });
