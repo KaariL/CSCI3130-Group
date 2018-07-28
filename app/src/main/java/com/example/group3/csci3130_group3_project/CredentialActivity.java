@@ -93,7 +93,11 @@ public class CredentialActivity extends AppCompatActivity implements View.OnClic
                     finish();
 
 
-                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                    Intent login = new Intent(getApplicationContext(), MainActivity.class);
+                    //prevents back navigation to login page
+                    login.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(login);
+
                 }
                 else
                 {
