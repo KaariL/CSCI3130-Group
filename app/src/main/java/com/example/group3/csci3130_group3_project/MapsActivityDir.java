@@ -102,11 +102,11 @@ public class MapsActivityDir extends FragmentActivity implements OnMapReadyCallb
         String origin = cur;
         String destination = de;
         if (origin.isEmpty()) {
-            Toast.makeText(this, "Please enter origin address!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.mapsactivity_enter_origin_address, Toast.LENGTH_SHORT).show();
             return;
         }
         if (destination.isEmpty()) {
-            Toast.makeText(this, "Please enter destination address!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.mapsactivity_enter_destination_address, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -135,7 +135,7 @@ public class MapsActivityDir extends FragmentActivity implements OnMapReadyCallb
                     }
                     else
                     {
-                        Toast.makeText(this,"Permission Denied",Toast.LENGTH_LONG).show();
+                        Toast.makeText(this,R.string.mapsactivity_pd,Toast.LENGTH_LONG).show();
 
                     }
                     return;
@@ -303,8 +303,8 @@ public class MapsActivityDir extends FragmentActivity implements OnMapReadyCallb
 
     @Override
     public void onDirectionFinderStart() {
-        progressDialog = ProgressDialog.show(this, "Please wait.",
-                "Navigating...", true);
+        progressDialog = ProgressDialog.show(this, String.valueOf(R.string.mapsactivity_wait) ,
+                String.valueOf(R.string.mapsactivity_nav), true);
 
         if (originMarkers != null) {
             for (Marker marker : originMarkers) {
