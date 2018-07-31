@@ -81,13 +81,11 @@ public class CredentialActivity extends AppCompatActivity implements View.OnClic
             return;
         }
 
-        progressDialog.setMessage(getString(R.string.login_successful));
-        progressDialog.show();
 
         firebaseAuth.signInWithEmailAndPassword(userN,psw).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                progressDialog.dismiss();
+
                 if(task.isSuccessful())
                 {
                     finish();
