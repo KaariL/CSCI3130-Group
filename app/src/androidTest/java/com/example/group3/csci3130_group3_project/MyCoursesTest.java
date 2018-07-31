@@ -21,6 +21,7 @@ import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -53,7 +54,7 @@ public class MyCoursesTest {
         onView(withId(R.id.editText_name)).perform(typeTextIntoFocusedView("testaccount@gmail.com"));
         //click the pw field and enter the password
         onView(withId(R.id.editText_psw)).perform(click());
-        onView(withId(R.id.editText_psw)).perform(typeTextIntoFocusedView("Kentstreet"));
+        onView(withId(R.id.editText_psw)).perform(typeTextIntoFocusedView("Kentstreet"), closeSoftKeyboard());
         //Click the login button
         onView(withId(R.id.button_login)).perform(click());
         //open the nav drawer and click the courses activity
@@ -75,71 +76,10 @@ public class MyCoursesTest {
         onView(withText(R.string.nav_myCourses)).perform(click());
         Thread.sleep(500);
         onData(allOf(is(instanceOf(Course.class)), withContent("Intro to Computer Programming"))).perform(click());
-
-
-    }
-    /*
-    @Test
-    public void createMinimumContact() throws Exception{
-        onView(allOf(withId(R.id.submitButton), withText("Create Contact"))).perform(click());
-        onView(withId(R.id.name)).perform(typeTextIntoFocusedView("Smol Business Place"));
-        onView(withId(R.id.businessNumber)).perform(click());
-        onView(withId(R.id.businessNumber)).perform(typeTextIntoFocusedView("123456789"));
-        onView(withId(R.id.primaryBusiness_spinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Fisher"))).perform(click());
-        onView(allOf(withId(R.id.submitButton), withText("Create Business"))).perform(click());
-
-        onData(allOf(is(instanceOf(Contact.class)), withContent("Smol Business Place"))).perform(click());
-        onView(withId(R.id.det_name)).check(matches(withText("Smol Business Place")));
-        //delete the entry so the test can be run subsequently
-        onView(withId(R.id.deleteButton)).perform(click());
-    }
-    @Test
-    public void createFullDetailContact() throws Exception{
-        onView(allOf(withId(R.id.submitButton), withText("Create Contact"))).perform(click());
-        onView(withId(R.id.name)).perform(typeTextIntoFocusedView("Big Business Place"));
-        onView(withId(R.id.businessNumber)).perform(click());
-        onView(withId(R.id.businessNumber)).perform(typeTextIntoFocusedView("123456789"));
-        onView(withId(R.id.primaryBusiness_spinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Fisher"))).perform(click());
-        onView(withId(R.id.address)).perform(click());
-        onView(withId(R.id.address)).perform(typeTextIntoFocusedView("15 Somewhere road"));
-        onView(withId(R.id.province_spinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("NS"))).perform(click());
-        onView(allOf(withId(R.id.submitButton), withText("Create Business"))).perform(click());
-
-        onData(allOf(is(instanceOf(Contact.class)), withContent("Big Business Place"))).perform(click());
-        onView(withId(R.id.det_name)).check(matches(withText("Big Business Place")));
-        //delete the entry so the test can be run subsequently
-        onView(withId(R.id.deleteButton)).perform(click());
+        onView(withText("Remove Course")).perform(click());
 
     }
-    @Test
-    public void createAndUpdate() throws Exception{
-        onView(allOf(withId(R.id.submitButton), withText("Create Contact"))).perform(click());
-        onView(withId(R.id.name)).perform(typeTextIntoFocusedView("Another Business Place"));
-        onView(withId(R.id.businessNumber)).perform(click());
-        onView(withId(R.id.businessNumber)).perform(typeTextIntoFocusedView("123456789"));
-        onView(withId(R.id.primaryBusiness_spinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Fisher"))).perform(click());
-        onView(withId(R.id.address)).perform(click());
-        onView(withId(R.id.address)).perform(typeTextIntoFocusedView("15 Somewhere road"));
-        onView(withId(R.id.province_spinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("NS"))).perform(click());
-        onView(allOf(withId(R.id.submitButton), withText("Create Business"))).perform(click());
 
-        onData(allOf(is(instanceOf(Contact.class)), withContent("Another Business Place"))).perform(click());
-        onView(withId(R.id.det_name)).check(matches(withText("Another Business Place")));
-        onView(withId(R.id.det_name)).perform(click());
-        onView(withId(R.id.det_name)).perform(clearText());
-        onView(withId(R.id.det_name)).perform(typeTextIntoFocusedView("A new name"));
-        onView(withId(R.id.updateButton)).perform(click());
-        //should now navigate to main
-        onData(allOf(is(instanceOf(Contact.class)), withContent("A new name"))).perform(click());
-        onView(withId(R.id.det_name)).check(matches(withText("A new name")));
-        onView(withId(R.id.deleteButton)).perform(click());
-    }
-    */
     public static Matcher<Object> withContent(final String content) {
         return new BoundedMatcher<Object, Course>(Course.class) {
             @Override
