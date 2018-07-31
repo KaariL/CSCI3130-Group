@@ -396,8 +396,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     }
     @Override
     public void onDirectionFinderStart() {
-        progressDialog = ProgressDialog.show(this, String.valueOf(R.string.mapsactivity_wait),
-                String.valueOf(R.string.mapsactivity_nav), true);
+        progressDialog = ProgressDialog.show(this, "Please Wait...",
+                "Navigating...", true);
 
         if (originMarkers != null) {
             for (Marker marker : originMarkers) {
