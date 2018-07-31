@@ -372,7 +372,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
 
         progressDialog = ProgressDialog.show(this, getString(R.string.main_navigateDialog_title),
                 getString(R.string.main_navigate_message), true);
-
+        progressDialog.setCancelable(true);
 
         if (originMarkers != null) {
             for (Marker marker : originMarkers) {
