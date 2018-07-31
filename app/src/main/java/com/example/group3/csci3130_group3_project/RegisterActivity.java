@@ -55,6 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Log.d(TAG, "createUserWithEmail:success");
                             Intent main = new Intent(RegisterActivity.this, MainActivity.class);
+                            main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             FirebaseUser user = mAuth.getCurrentUser();
                             firebaseDBInstance = FirebaseDatabase.getInstance();
                             firebaseReference =  firebaseDBInstance.getReference();
@@ -100,13 +101,13 @@ public class RegisterActivity extends AppCompatActivity {
             email.setTextColor(Color.RED);
             this.formIsValid = false;
         }
-        if(!validator.passwordIsStrong(this.getPasswordField())){
+        else if(!validator.passwordIsStrong(this.getPasswordField())){
             TextView password = findViewById(R.id.passwordText);
             password.setText(R.string.passwordRegErr);
             password.setTextColor(Color.RED);
             this.formIsValid = false;
         }
-        if(!validator.passwordsMatch(this.getPasswordField(), this.getConfirmPasswordField())){
+        else if(!validator.passwordsMatch(this.getPasswordField(), this.getConfirmPasswordField())){
             TextView confirmPass = findViewById(R.id.confirmPasswordText);
             confirmPass.setText(R.string.confirmPassRegErr);
             confirmPass.setTextColor(Color.RED);
