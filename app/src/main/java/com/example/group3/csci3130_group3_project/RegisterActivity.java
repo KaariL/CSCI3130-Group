@@ -80,9 +80,9 @@ public class RegisterActivity extends AppCompatActivity {
                         else {
                             Log.w(TAG, "createUserWithEmail:failed");
                             if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                                Toast.makeText(RegisterActivity.this, "This email is already in use. Please try again", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, R.string.email_in_use, Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(RegisterActivity.this, "Authenitifcation failed",
+                                Toast.makeText(RegisterActivity.this, R.string.auth_failure,
                                         Toast.LENGTH_SHORT).show();
 
                             }

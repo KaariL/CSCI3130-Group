@@ -54,14 +54,14 @@ public class emailActivity extends AppCompatActivity implements View.OnClickList
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(getApplicationContext(), "Reset email instructions sent to "+em, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), R.string.email_reset_instructions+em, Toast.LENGTH_LONG).show();
                                 finish();
                                 Intent i  = new Intent(emailActivity.this, CredentialActivity.class);
                                 i.putExtra("email",em);
                                 startActivity(i);
 
                             } else {
-                                Toast.makeText(getApplicationContext(), em + " does not exist", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), em + R.string.email_does_not_exist, Toast.LENGTH_LONG).show();
                             }
                         }
                     });

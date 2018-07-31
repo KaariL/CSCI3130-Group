@@ -14,6 +14,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -52,6 +54,9 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -128,8 +133,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
             mLocationManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER,true);
             // Build the alert dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Location Services Not Active");
-            builder.setMessage("Please enable Location Services and GPS");
+            builder.setTitle(R.string.mapsactivity_loaction_services_notactive);
+            builder.setMessage(R.string.mapsactivity_gps_location_not_active);
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     // Show location settings when the user acknowledges the alert dialog
@@ -149,8 +154,80 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //COLOR THE
+        colorBG();
+    }
 
+    public void colorBG() {
+        final String[] colorString = {"FFFFFF"}; //default
+        ChildEventListener userListener = new ChildEventListener() {
 
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                UserProfile thisUser = dataSnapshot.getValue(UserProfile.class);
+                if (thisUser != null) {
+                    colorString[0] = thisUser.getFavoriteColor();
+                    Log.d("Favorite COLOR:", colorString[0]);
+                }
+                View thisView = findViewById(R.id.drawer_layout);
+                int color;
+                try {
+                    color = Color.parseColor(String.valueOf(colorString[0]));
+                } catch (Exception e) {
+                    color = Color.parseColor(String.valueOf("#FFFFFF"));
+                }
+                thisView.setBackgroundColor(color);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                View thisView = findViewById(R.id.mainViewForBG);
+//                View rootOfThisView = thisView.getRootView();
+//                UserProfile thisUser = dataSnapshot.getValue(UserProfile.class);
+//                if (thisUser != null) {
+//                    String colorString = thisUser.getFavoriteColor();
+//                    Log.d("Favorite COLOR:", colorString);
+//                    int color = Color.parseColor(String.valueOf(colorString));
+//                    rootOfThisView.setBackgroundColor(color);
+
+                UserProfile thisUser = dataSnapshot.getValue(UserProfile.class);
+                if (thisUser != null) {
+                    colorString[0] = thisUser.getFavoriteColor();
+                    Log.d("Favorite COLOR:", colorString[0]);
+                }
+                View thisView = findViewById(R.id.drawer_layout);
+                int color;
+                try {
+                    color = Color.parseColor(String.valueOf(colorString[0]));
+                } catch (Exception e) {
+                    color = Color.parseColor(String.valueOf("#FFFFFF"));
+                }
+                thisView.setBackgroundColor(color);
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        if (firebaseAuth.getCurrentUser() == null) {
+            finish();
+            startActivity(new Intent(this, CredentialActivity.class));
+        }
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        firebaseDBInstance = FirebaseDatabase.getInstance();
+        firebaseReference = firebaseDBInstance.getReference();
+        firebaseReference.child("users").child(user.getUid()).child("userprofile").addChildEventListener(userListener);
     }
 
     @Override
@@ -158,6 +235,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
         super.onStart();
         updateLocation();
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -251,7 +329,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                         String origin = originAddress.getAddressLine(0) + "" + originAddress.getPostalCode();
                         sendRequest(origin, destination);
                     } else {
-                        Toast.makeText(this, "We couldn't find your place. Please try again.", Toast.LENGTH_LONG);
+                        Toast.makeText(this, R.string.mapsactivity_place_not_found, Toast.LENGTH_LONG);
                     }
                 }
         }
@@ -280,10 +358,10 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                         String destination = address.getAddressLine(0) + "" + address.getPostalCode();
                         String origin = originAddress.getAddressLine(0) + "" + originAddress.getPostalCode();
-                        Log.d("PErform search:", origin + " " + destination);
+                        Log.d("Perform search:", origin + " " + destination);
                         sendRequest(origin, destination);
                     } else {
-                        Toast.makeText(this, "We couldn't find your place. Please try again.", Toast.LENGTH_LONG);
+                        Toast.makeText(this, R.string.mapsactivity_place_not_found, Toast.LENGTH_LONG);
                     }
                 }
             }
@@ -291,8 +369,10 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback, Go
     }
     @Override
     public void onDirectionFinderStart() {
+
         progressDialog = ProgressDialog.show(this, getString(R.string.main_navigateDialog_title),
                 getString(R.string.main_navigate_message), true);
+
 
         if (originMarkers != null) {
             for (Marker marker : originMarkers) {
