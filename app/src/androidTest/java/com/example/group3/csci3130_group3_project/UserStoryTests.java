@@ -119,8 +119,6 @@ public class UserStoryTests {
         Thread.sleep(1500);
         Espresso.onView(withId(R.id.searchBar)).perform(ViewActions.typeText(randomStreetAddress),closeSoftKeyboard());
         Thread.sleep(500);
-        Espresso.onView(withId(R.id.searchButton)).perform(ViewActions.click());
-        Thread.sleep(500);
         Espresso.onView(withId(R.id.map)).check( matches( isDisplayed() ) );
     }
 

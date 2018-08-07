@@ -73,9 +73,10 @@ public class MyCoursesTest {
         //NAvigate to My Courses
         onView(withContentDescription("Navigate up")).perform(click());
         Thread.sleep(500);
-        onView(withText(R.string.nav_myCourses)).perform(click());
+        onView(withText("My Courses")).perform(click());
         Thread.sleep(500);
-        onData(allOf(is(instanceOf(Course.class)), withContent("Intro to Computer Programming"))).perform(click());
+        onView(withText("Intro to Computer Programming (CSCI 1105)")).perform(click());
+        //onData(allOf(is(instanceOf(Course.class)), withContent("Intro to Computer Programming"))).perform(click());
         onView(withText("Remove Course")).perform(click());
 
     }
